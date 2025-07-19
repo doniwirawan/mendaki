@@ -28,31 +28,56 @@
             <!-- File Format Guide -->
             <div class="file-guide" id="fileGuide">
                 <div class="guide-header">
-                    <div class="guide-title">📄 Supported Formats</div>
+                    <div class="guide-title">📄 File Options</div>
                     <button class="guide-close" id="guideClose">×</button>
                 </div>
-                <ul class="format-list">
-                    <li class="format-item">
-                        <div class="format-icon"></div>
-                        <span class="format-name">GPX</span>
-                        <span class="format-desc">GPS tracks from Garmin, Strava</span>
-                    </li>
-                    <li class="format-item">
-                        <div class="format-icon"></div>
-                        <span class="format-name">KML</span>
-                        <span class="format-desc">Google Earth, Maps routes</span>
-                    </li>
-                    <li class="format-item">
-                        <div class="format-icon"></div>
-                        <span class="format-name">TCX</span>
-                        <span class="format-desc">Garmin Training Center</span>
-                    </li>
-                    <li class="format-item">
-                        <div class="format-icon"></div>
-                        <span class="format-name">KMZ</span>
-                        <span class="format-desc">Compressed Google Earth</span>
-                    </li>
-                </ul>
+
+                <!-- Sample Trails Section -->
+                <div class="trails-section">
+                    <h4 class="section-title">🏔️ Bali Trails</h4>
+                    <div class="trail-list" id="trailList">
+                        <button class="trail-btn" data-trail="Gunung Abang">🌋 Gunung Abang</button>
+                        <button class="trail-btn" data-trail="Gunung Adeng">🌋 Gunung Adeng</button>
+                        <button class="trail-btn" data-trail="Gunung Agung">🏔️ Gunung Agung</button>
+                        <button class="trail-btn" data-trail="Gunung Batukaru">⛰️ Gunung Batukaru</button>
+                        <button class="trail-btn" data-trail="Gunung Batur">🌋 Gunung Batur</button>
+                        <button class="trail-btn" data-trail="Gunung Catur">🌋 Gunung Catur</button>
+                        <button class="trail-btn" data-trail="Gunung Pohen">🏔️ Gunung Pohen</button>
+                        <button class="trail-btn" data-trail="Gunung Sanghyang">⛰️ Gunung Sanghyang</button>
+                        <button class="trail-btn" data-trail="Gunung Tapak">🌋 Gunung Tapak</button>
+                    </div>
+                </div>
+
+                <!-- Saved Files Section -->
+                <div class="saved-section">
+                    <h4 class="section-title">💾 Saved Tracks</h4>
+                    <div class="saved-list" id="savedList">
+                        <div class="no-saved">No saved tracks yet</div>
+                    </div>
+                    <button class="clear-saved-btn" id="clearSavedBtn">🗑️ Clear All Saved</button>
+                </div>
+
+                <!-- Supported Formats -->
+                <div class="formats-section">
+                    <h4 class="section-title">📋 Supported Formats</h4>
+                    <ul class="format-list">
+                        <li class="format-item">
+                            <div class="format-icon"></div>
+                            <span class="format-name">GPX</span>
+                            <span class="format-desc">GPS tracks</span>
+                        </li>
+                        <li class="format-item">
+                            <div class="format-icon"></div>
+                            <span class="format-name">KML</span>
+                            <span class="format-desc">Google Earth</span>
+                        </li>
+                        <li class="format-item">
+                            <div class="format-icon"></div>
+                            <span class="format-name">TCX</span>
+                            <span class="format-desc">Garmin</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 

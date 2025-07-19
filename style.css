@@ -50,7 +50,7 @@ body {
 /* Location Status Overlay */
 .location-overlay {
     position: absolute;
-    top: 70px;
+    top: 50px;
     left: 20px;
     right: 20px;
     background: rgba(26, 26, 26, 0.95);
@@ -324,6 +324,7 @@ body {
 /* File Format Guide */
 .file-guide {
     position: absolute;
+    left: 20px;
     top: 20px;
     right: 20px;
     background: rgba(26, 26, 26, 0.95);
@@ -415,7 +416,7 @@ body {
     }
 
     .location-overlay {
-        left: 16px;
+        left: 50px;
         right: 16px;
         top: 60px;
     }
@@ -463,5 +464,188 @@ body {
 
     .bottom-nav {
         padding-bottom: max(20px, env(safe-area-inset-bottom) + 10px);
+    }
+}
+
+.leaflet-control-zoom {
+    position: absolute !important;
+    top: auto !important;
+    bottom: 20px !important;
+    left: auto !important;
+    right: 20px !important;
+    z-index: 1000 !important;
+}
+
+/* Optional: Adjust for mobile screens */
+@media (max-width: 480px) {
+    .leaflet-control-zoom {
+        bottom: 100px !important;
+        /* Adjust to avoid bottom navigation */
+        right: 16px !important;
+    }
+}
+
+
+/* Enhanced Location Status Overlay */
+.location-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 60%;
+    background: linear-gradient(135deg, rgba(0, 212, 170, 0.95) 0%, rgba(0, 170, 130, 0.95) 100%);
+    border: 1px solid #00D4AA;
+    border-radius: 12px;
+    padding: 12px 16px;
+    backdrop-filter: blur(15px);
+    z-index: 999;
+    display: none;
+    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    max-width: 280px;
+}
+
+.location-overlay.active {
+    display: block;
+    transform: translateY(0);
+    animation: slideInFromTop 0.3s ease;
+}
+
+/* Enhanced File Format Guide */
+.file-guide {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    left: 60%;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
+    border: 1px solid #00D4AA;
+    border-radius: 12px;
+    padding: 12px 16px;
+    backdrop-filter: blur(15px);
+    z-index: 999;
+    display: none;
+    max-width: 280px;
+    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.2);
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.file-guide.show {
+    display: block;
+    transform: translateY(0);
+    animation: slideInFromTop 0.3s ease;
+}
+
+/* Animations */
+@keyframes slideInFromTop {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Smaller content for overlays */
+.location-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.location-icon {
+    width: 20px;
+    height: 20px;
+    background: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.location-text {
+    font-size: 0.8rem;
+    color: #000;
+    font-weight: 700;
+}
+
+.location-coords {
+    font-size: 0.7rem;
+    color: #000;
+    margin-bottom: 6px;
+    opacity: 0.8;
+    font-weight: 600;
+}
+
+.guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0, 212, 170, 0.3);
+}
+
+.guide-title {
+    font-size: 0.8rem;
+    color: #00D4AA;
+    font-weight: 700;
+}
+
+.format-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.7rem;
+    color: #ccc;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.format-icon {
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(45deg, #00D4AA, #00BF96);
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.format-name {
+    font-weight: 700;
+    color: #00D4AA;
+    min-width: 30px;
+    font-size: 0.7rem;
+}
+
+.format-desc {
+    color: #999;
+    font-weight: 500;
+    font-size: 0.65rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+    .location-overlay {
+        left: 16px;
+        right: 50%;
+        top: 16px;
+    }
+
+    .file-guide {
+        left: 50%;
+        right: 16px;
+        top: 16px;
+    }
+
+    .location-overlay,
+    .file-guide {
+        max-width: none;
+        min-width: 140px;
     }
 }

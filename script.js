@@ -7,9 +7,17 @@ class MendakiViewer {
         this.currentPosition = null;
         this.trackData = [];
 
+        // Overlay management
+        this.locationTimeout = null;
+        this.guideTimeout = null;
+
+        // Local storage key
+        this.storageKey = 'mendaki_saved_tracks';
+
         this.initializeMap();
         this.bindEvents();
         this.requestLocation();
+        this.loadSavedTracks();
         this.registerServiceWorker();
     }
 
@@ -32,6 +40,36 @@ class MendakiViewer {
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
         document.getElementById('helpBtn').addEventListener('click', () => this.toggleFileGuide());
         document.getElementById('guideClose').addEventListener('click', () => this.hideFileGuide());
+        document.getElementById('clearSavedBtn').addEventListener('click', () => this.clearAllSaved());
+
+        // Trail selection events
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('trail-btn')) {
+                this.loadSampleTrail(e.target.dataset.trail);
+            }
+            if (e.target.classList.contains('saved-item')) {
+                this.loadSavedTrack(e.target.dataset.id);
+            }
+            if (e.target.classList.contains('delete-saved')) {
+                e.stopPropagation();
+                this.deleteSavedTrack(e.target.dataset.id);
+            }
+            // Handle outside clicks
+            this.handleOutsideClick(e);
+        });
+    }
+
+    handleOutsideClick(event) {
+        const locationOverlay = document.getElementById('locationOverlay');
+        const fileGuide = document.getElementById('fileGuide');
+        const helpBtn = document.getElementById('helpBtn');
+
+        // If click is outside both overlays and not on help button, hide them
+        if (!locationOverlay.contains(event.target) &&
+            !fileGuide.contains(event.target) &&
+            !helpBtn.contains(event.target)) {
+            this.hideAllOverlays();
+        }
     }
 
     async requestLocation() {
@@ -94,10 +132,13 @@ class MendakiViewer {
         const locationCoords = document.getElementById('locationCoords');
         const accuracyBadge = document.getElementById('accuracyBadge');
 
+        // Hide file guide if showing
+        this.hideFileGuide();
+
         locationOverlay.classList.add('active');
 
         const { lat, lng, accuracy, elevation } = this.currentPosition;
-        locationCoords.textContent = `${lat.toFixed(5)}°, ${lng.toFixed(5)}° • ${Math.round(elevation)}m`;
+        locationCoords.textContent = `${lat.toFixed(4)}°, ${lng.toFixed(4)}° • ${Math.round(elevation)}m`;
 
         // Update accuracy
         let accuracyClass = 'accuracy-low';
@@ -113,6 +154,14 @@ class MendakiViewer {
 
         accuracyBadge.className = `accuracy-badge ${accuracyClass}`;
         accuracyBadge.textContent = `${accuracyText} (±${Math.round(accuracy)}m)`;
+
+        // Auto-hide after 5 seconds
+        if (this.locationTimeout) {
+            clearTimeout(this.locationTimeout);
+        }
+        this.locationTimeout = setTimeout(() => {
+            locationOverlay.classList.remove('active');
+        }, 5000);
     }
 
     updateCurrentLocationMarker() {
@@ -167,6 +216,8 @@ class MendakiViewer {
     goToCurrentLocation() {
         if (this.currentPosition) {
             this.map.setView([this.currentPosition.lat, this.currentPosition.lng], 16);
+            // Trigger location display when manually centering
+            this.updateLocationDisplay();
         } else {
             console.log('Current location not available');
         }
@@ -175,6 +226,9 @@ class MendakiViewer {
     async handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
+
+        // Hide all overlays when loading file
+        this.hideAllOverlays();
 
         const fileName = file.name.toLowerCase();
         const supportedFormats = ['.gpx', '.kml', '.tcx', '.fit', '.kmz'];
@@ -191,10 +245,14 @@ class MendakiViewer {
 
             if (fileName.endsWith('.gpx')) {
                 this.parseAndDisplayGPX(fileContent);
+                // Save to local storage
+                this.saveTrackToStorage(file.name, fileContent, 'gpx');
             } else if (fileName.endsWith('.kml') || fileName.endsWith('.kmz')) {
                 this.parseAndDisplayKML(fileContent);
+                this.saveTrackToStorage(file.name, fileContent, 'kml');
             } else if (fileName.endsWith('.tcx')) {
                 this.parseAndDisplayTCX(fileContent);
+                this.saveTrackToStorage(file.name, fileContent, 'tcx');
             } else if (fileName.endsWith('.fit')) {
                 console.log('FIT file support coming soon');
             }
@@ -602,6 +660,9 @@ class MendakiViewer {
     }
 
     clearAll() {
+        // Hide all overlays
+        this.hideAllOverlays();
+
         // Clear track layer
         if (this.trackLayer) {
             this.map.removeLayer(this.trackLayer);
@@ -638,11 +699,185 @@ class MendakiViewer {
 
     toggleFileGuide() {
         const fileGuide = document.getElementById('fileGuide');
-        fileGuide.classList.toggle('show');
+        const locationOverlay = document.getElementById('locationOverlay');
+
+        if (fileGuide.classList.contains('show')) {
+            this.hideFileGuide();
+        } else {
+            // Hide location overlay if showing
+            locationOverlay.classList.remove('active');
+            if (this.locationTimeout) {
+                clearTimeout(this.locationTimeout);
+            }
+
+            fileGuide.classList.add('show');
+
+            // Auto-hide after 8 seconds
+            if (this.guideTimeout) {
+                clearTimeout(this.guideTimeout);
+            }
+            this.guideTimeout = setTimeout(() => {
+                this.hideFileGuide();
+            }, 8000);
+        }
     }
 
     hideFileGuide() {
+        const fileGuide = document.getElementById('fileGuide');
+        fileGuide.classList.remove('show');
+        if (this.guideTimeout) {
+            clearTimeout(this.guideTimeout);
+        }
+    }
+
+    hideAllOverlays() {
+        document.getElementById('locationOverlay').classList.remove('active');
         document.getElementById('fileGuide').classList.remove('show');
+        if (this.locationTimeout) clearTimeout(this.locationTimeout);
+        if (this.guideTimeout) clearTimeout(this.guideTimeout);
+    }
+
+    // Local Storage Management
+    saveTrackToStorage(filename, content, type) {
+        try {
+            const savedTracks = this.getSavedTracks();
+            const trackId = Date.now().toString();
+            const track = {
+                id: trackId,
+                name: filename.replace(/\.(gpx|kml|tcx)$/i, ''),
+                content: content,
+                type: type,
+                date: new Date().toISOString(),
+                size: content.length
+            };
+
+            savedTracks[trackId] = track;
+            localStorage.setItem(this.storageKey, JSON.stringify(savedTracks));
+            this.updateSavedTracksList();
+            console.log(`Track "${filename}" saved to local storage`);
+        } catch (error) {
+            console.log('Failed to save track to local storage:', error);
+        }
+    }
+
+    getSavedTracks() {
+        try {
+            const saved = localStorage.getItem(this.storageKey);
+            return saved ? JSON.parse(saved) : {};
+        } catch (error) {
+            return {};
+        }
+    }
+
+    loadSavedTracks() {
+        this.updateSavedTracksList();
+    }
+
+    updateSavedTracksList() {
+        const savedList = document.getElementById('savedList');
+        const clearBtn = document.getElementById('clearSavedBtn');
+        const savedTracks = this.getSavedTracks();
+        const trackIds = Object.keys(savedTracks);
+
+        if (trackIds.length === 0) {
+            savedList.innerHTML = '<div class="no-saved">No saved tracks yet</div>';
+            clearBtn.disabled = true;
+            return;
+        }
+
+        clearBtn.disabled = false;
+        savedList.innerHTML = '';
+
+        trackIds.slice(-5).reverse().forEach(id => { // Show last 5, newest first
+            const track = savedTracks[id];
+            const date = new Date(track.date).toLocaleDateString();
+            const size = (track.size / 1024).toFixed(1) + 'KB';
+
+            const item = document.createElement('div');
+            item.className = 'saved-item';
+            item.dataset.id = id;
+            item.innerHTML = `
+                <div>
+                    <div class="saved-name">${track.name}</div>
+                    <div class="saved-date">${date} • ${size}</div>
+                </div>
+                <button class="delete-saved" data-id="${id}">×</button>
+            `;
+            savedList.appendChild(item);
+        });
+    }
+
+    loadSavedTrack(trackId) {
+        const savedTracks = this.getSavedTracks();
+        const track = savedTracks[trackId];
+
+        if (!track) {
+            console.log('Track not found');
+            return;
+        }
+
+        this.hideFileGuide();
+        this.showLoading();
+
+        try {
+            if (track.type === 'gpx') {
+                this.parseAndDisplayGPX(track.content);
+            } else if (track.type === 'kml') {
+                this.parseAndDisplayKML(track.content);
+            } else if (track.type === 'tcx') {
+                this.parseAndDisplayTCX(track.content);
+            }
+            console.log(`Loaded saved track: ${track.name}`);
+        } catch (error) {
+            console.log('Error loading saved track:', error);
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    deleteSavedTrack(trackId) {
+        const savedTracks = this.getSavedTracks();
+        delete savedTracks[trackId];
+        localStorage.setItem(this.storageKey, JSON.stringify(savedTracks));
+        this.updateSavedTracksList();
+    }
+
+    clearAllSaved() {
+        if (confirm('Clear all saved tracks? This cannot be undone.')) {
+            localStorage.removeItem(this.storageKey);
+            this.updateSavedTracksList();
+        }
+    }
+
+    // Sample Trail Loading
+    async loadSampleTrail(trailName) {
+        this.hideFileGuide();
+        this.showLoading();
+
+        try {
+            const gpxContent = await this.loadAndParseGPX(trailName);
+            this.parseAndDisplayGPX(gpxContent);
+            this.saveTrackToStorage(`${trailName}.gpx`, gpxContent, 'gpx');
+            console.log(`Loaded sample trail: ${trailName}`);
+        } catch (error) {
+            console.log('Error loading sample trail:', error);
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    async loadAndParseGPX(trailName) {
+        try {
+            const response = await fetch(`gpx/${trailName}.gpx`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const gpxContent = await response.text();
+            return gpxContent;
+        } catch (error) {
+            console.error('Error fetching or parsing GPX file:', error);
+            throw error;
+        }
     }
 
     registerServiceWorker() {
