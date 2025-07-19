@@ -1,394 +1,467 @@
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #000;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 50px 20px 15px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.app-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+/* Map Container - takes remaining space */
+.map-container {
+    flex: 1;
+    position: relative;
+    background: #1a1a1a;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+/* Location Status Overlay */
+.location-overlay {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    right: 20px;
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 12px 16px;
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    display: none;
+}
+
+.location-overlay.active {
+    display: block;
+}
+
+.location-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+    background: #00D4AA;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.location-text {
+    font-size: 0.85rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.location-coords {
+    font-size: 0.75rem;
+    color: #ccc;
+    margin-bottom: 6px;
+}
+
+.accuracy-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.accuracy-high {
+    background: rgba(0, 212, 170, 0.2);
+    color: #00D4AA;
+}
+
+.accuracy-medium {
+    background: rgba(255, 193, 7, 0.2);
+    color: #FFC107;
+}
+
+.accuracy-low {
+    background: rgba(220, 53, 69, 0.2);
+    color: #DC3545;
+}
+
+/* Track Info Overlay */
+.track-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: none;
+}
+
+.track-info.active {
+    display: block;
+}
+
+.track-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.track-stat {
+    text-align: center;
+}
+
+.track-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #00D4AA;
+    display: block;
+}
+
+.track-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+/* Bottom Navigation - Instagram Style */
+.bottom-nav {
+    background: #1a1a1a;
+    border-top: 1px solid #333;
+    padding: 20px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-btn {
+    flex: 1;
+    height: 56px;
+    border: none;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.nav-btn .icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.nav-btn .label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* Load Track Button - Primary */
+.load-btn {
+    background: #00D4AA;
+    color: #000;
+    font-weight: 700;
+}
+
+.load-btn:hover {
+    background: #00BF96;
+}
+
+/* Secondary Buttons */
+.location-btn,
+.clear-btn,
+.help-btn {
+    background: #2d2d2d;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.location-btn:hover,
+.clear-btn:hover,
+.help-btn:hover {
+    background: #3d3d3d;
+    border-color: #00D4AA;
+}
+
+.file-input {
+    display: none;
+}
+
+/* Loading Overlay */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.loading.show {
+    display: flex;
+}
+
+.loading-content {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    max-width: 280px;
+    width: 90%;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #333;
+    border-top: 3px solid #00D4AA;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
     }
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        background: #000;
-        color: #fff;
-        height: 100vh;
-        overflow: hidden;
+    100% {
+        transform: rotate(360deg);
     }
+}
 
-    .app-container {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
+/* Dark mode optimizations for Leaflet */
+.leaflet-popup-content-wrapper {
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+}
 
-    /* Header */
+.leaflet-popup-tip {
+    background: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.leaflet-control-zoom a {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: #2d2d2d;
+    border-color: #00D4AA;
+}
+
+.leaflet-control-attribution {
+    background: rgba(26, 26, 26, 0.8);
+    color: #ccc;
+}
+
+/* File Format Guide */
+.file-guide {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 12px 16px;
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    display: none;
+    max-width: 280px;
+}
+
+.file-guide.show {
+    display: block;
+}
+
+.guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.guide-title {
+    font-size: 0.85rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.guide-close {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.guide-close:hover {
+    color: #fff;
+}
+
+.format-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.format-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.75rem;
+    color: #ccc;
+}
+
+.format-icon {
+    width: 12px;
+    height: 12px;
+    background: #00D4AA;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.format-name {
+    font-weight: 600;
+    color: #00D4AA;
+    min-width: 35px;
+}
+
+.format-desc {
+    color: #888;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
     .header {
-        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-        padding: 50px 20px 15px;
-        text-align: center;
-        border-bottom: 1px solid #333;
-        flex-shrink: 0;
+        padding: 45px 16px 12px;
     }
 
     .app-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #fff;
-        letter-spacing: -0.5px;
+        font-size: 1.3rem;
     }
 
-    /* Map Container - takes remaining space */
-    .map-container {
-        flex: 1;
-        position: relative;
-        background: #1a1a1a;
-    }
-
-    #map {
-        height: 100%;
-        width: 100%;
-    }
-
-    /* Location Status Overlay */
     .location-overlay {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        background: rgba(26, 26, 26, 0.95);
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 12px 16px;
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        display: none;
+        left: 16px;
+        right: 16px;
+        top: 60px;
     }
 
-    .location-overlay.active {
-        display: block;
-    }
-
-    .location-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 6px;
-    }
-
-    .location-icon {
-        width: 16px;
-        height: 16px;
-        background: #00D4AA;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-    }
-
-    .location-text {
-        font-size: 0.85rem;
-        color: #fff;
-        font-weight: 600;
-    }
-
-    .location-coords {
-        font-size: 0.75rem;
-        color: #ccc;
-        margin-bottom: 6px;
-    }
-
-    .accuracy-badge {
-        display: inline-block;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 0.65rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .accuracy-high {
-        background: rgba(0, 212, 170, 0.2);
-        color: #00D4AA;
-    }
-
-    .accuracy-medium {
-        background: rgba(255, 193, 7, 0.2);
-        color: #FFC107;
-    }
-
-    .accuracy-low {
-        background: rgba(220, 53, 69, 0.2);
-        color: #DC3545;
-    }
-
-    /* Track Info Overlay */
     .track-info {
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
-        background: rgba(26, 26, 26, 0.95);
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 16px;
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        display: none;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
     }
 
-    .track-info.active {
-        display: block;
+    .file-guide {
+        left: 16px;
+        right: 16px;
+        top: 16px;
+        max-width: none;
     }
 
-    .track-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-    }
-
-    .track-stat {
-        text-align: center;
-    }
-
-    .track-value {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #00D4AA;
-        display: block;
-    }
-
-    .track-label {
-        font-size: 0.7rem;
-        color: #888;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-top: 2px;
-    }
-
-    /* Bottom Navigation - Instagram Style */
     .bottom-nav {
-        background: #1a1a1a;
-        border-top: 1px solid #333;
-        padding: 20px;
-        flex-shrink: 0;
-        position: relative;
-    }
-
-    .nav-buttons {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 20px;
+        padding: 16px;
     }
 
     .nav-btn {
-        flex: 1;
-        height: 56px;
-        border: none;
-        border-radius: 16px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        position: relative;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .nav-btn:active {
-        transform: scale(0.95);
+        height: 52px;
     }
 
     .nav-btn .icon {
-        font-size: 1.4rem;
-        line-height: 1;
+        font-size: 1.2rem;
     }
 
     .nav-btn .label {
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.3px;
+        font-size: 0.65rem;
     }
 
-    /* Load GPX Button - Primary */
-    .load-btn {
-        background: #00D4AA;
-        color: #000;
-        font-weight: 700;
+    .track-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+}
+
+/* Safe area for iOS */
+@supports (padding: max(0px)) {
+    .header {
+        padding-top: max(50px, env(safe-area-inset-top) + 10px);
     }
 
-    .load-btn:hover {
-        background: #00BF96;
+    .bottom-nav {
+        padding-bottom: max(20px, env(safe-area-inset-bottom) + 10px);
     }
-
-    /* Secondary Buttons */
-    .location-btn,
-    .clear-btn {
-        background: #2d2d2d;
-        color: #fff;
-        border: 1px solid #444;
-    }
-
-    .location-btn:hover,
-    .clear-btn:hover {
-        background: #3d3d3d;
-        border-color: #00D4AA;
-    }
-
-    .file-input {
-        display: none;
-    }
-
-    /* Loading Overlay */
-    .loading {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.9);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-    }
-
-    .loading.show {
-        display: flex;
-    }
-
-    .loading-content {
-        background: #1a1a1a;
-        border: 1px solid #333;
-        border-radius: 16px;
-        padding: 32px;
-        text-align: center;
-        max-width: 280px;
-        width: 90%;
-    }
-
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #333;
-        border-top: 3px solid #00D4AA;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 16px;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* Error Toast */
-    .error-toast {
-        position: fixed;
-        top: 100px;
-        left: 20px;
-        right: 20px;
-        background: #DC3545;
-        color: #fff;
-        padding: 16px;
-        border-radius: 12px;
-        transform: translateY(-100px);
-        transition: transform 0.3s ease;
-        z-index: 9999;
-        font-weight: 500;
-        box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
-    }
-
-    .error-toast.show {
-        transform: translateY(0);
-    }
-
-    /* Dark mode optimizations for Leaflet */
-    .leaflet-popup-content-wrapper {
-        background: #1a1a1a;
-        color: #fff;
-        border: 1px solid #333;
-    }
-
-    .leaflet-popup-tip {
-        background: #1a1a1a;
-        border: 1px solid #333;
-    }
-
-    .leaflet-control-zoom a {
-        background-color: #1a1a1a;
-        border: 1px solid #333;
-        color: #fff;
-    }
-
-    .leaflet-control-zoom a:hover {
-        background-color: #2d2d2d;
-        border-color: #00D4AA;
-    }
-
-    .leaflet-control-attribution {
-        background: rgba(26, 26, 26, 0.8);
-        color: #ccc;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 480px) {
-        .header {
-            padding: 45px 16px 12px;
-        }
-
-        .app-title {
-            font-size: 1.3rem;
-        }
-
-        .location-overlay,
-        .track-info {
-            left: 16px;
-            right: 16px;
-        }
-
-        .track-info {
-            bottom: 16px;
-        }
-
-        .bottom-nav {
-            padding: 16px;
-        }
-
-        .nav-btn {
-            height: 52px;
-        }
-
-        .nav-btn .icon {
-            font-size: 1.2rem;
-        }
-
-        .nav-btn .label {
-            font-size: 0.65rem;
-        }
-
-        .track-stats {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-    }
-
-    /* Safe area for iOS */
-    @supports (padding: max(0px)) {
-        .header {
-            padding-top: max(50px, env(safe-area-inset-top) + 10px);
-        }
-
-        .bottom-nav {
-            padding-bottom: max(20px, env(safe-area-inset-bottom) + 10px);
-        }
-    }
+}

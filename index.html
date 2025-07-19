@@ -4,27 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPX Map Viewer</title>
-    <meta name="description" content="Simple GPX file viewer with interactive maps">
+    <title>Mendaki</title>
+    <meta name="description" content="GPS track viewer for GPX, KML, and TCX files">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="GPX Viewer">
+    <meta name="apple-mobile-web-app-title" content="Mendaki">
     <link rel="icon" type="image/png" sizes="192x192"
-        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDAiIGZpbGw9IiMwMEQ0QUEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIj4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDIyQzIzLjEgMTIgMjQgMTIuOSAyNCAxNEMyNCAxNS4xIDIzLjEgMTYgMjIgMTZIMTRWMjJDMTQgMjMuMSAxMy4xIDI0IDEyIDI0QzEwLjkgMjQgMTAgMjMuMSAxMCAyMlYxNkgyQzAuOSAxNiAwIDE1LjEgMCAxNEMwIDEyLjkgMC45IDEyIDIgMTJIMTBWNEMxMCAyLjkgMTAuOSAyIDEyIDJaIiBmaWxsPSIjMDAwIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+">
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDAiIGZpbGw9IiMwMEQ0QUEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIj4KPHBhdGggZD0iTTUgMTdIMTlMMTMuNSA5TDEwLjUgMTNMNi41IDkgNSAxN1oiIGZpbGw9IiMwMDAiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDIyQzIzLjEgMTIgMjQgMTIuOSAyNCAxNEMyNCAxNS4xIDIzLjEgMTYgMjIgMTZIMTRWMjJDMTQgMjMuMSAxMy4xIDI0IDEyIDI0QzEwLjkgMjQgMTAgMjMuMSAxMCAyMlYxNkgyQzAuOSAxNiAwIDE1LjEgMCAxNEMwIDEyLjkgMC45IDEyIDIgMTJIMTBWNEMxMCAyLjkgMTAuOSAyIDEyIDJaIiBmaWxsPSIjMDAwIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+">
     <link rel="apple-touch-icon"
-        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDAiIGZpbGw9IiMwMEQ0QUEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIj4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDIyQzIzLjEgMTIgMjQgMTIuOSAyNCAxNEMyNCAxNS4xIDIzLjEgMTYgMjIgMTZIMTRWMjJDMTQgMjMuMSAxMy4xIDI0IDEyIDI0QzEwLjkgMjQgMTAgMjMuMSAxMCAyMlYxNkgyQzAuOSAxNiAwIDE1LjEgMCAxNEMwIDEyLjkgMC45IDEyIDIgMTJIMTBWNEMxMCAyLjkgMTAuOSAyIDEyIDJaIiBmaWxsPSIjMDAwIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+">
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDAiIGZpbGw9IiMwMEQ0QUEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIj4KPHBhdGggZD0iTTUgMTdIMTlMMTMuNSA5TDEwLjUgMTNMNi41IDkgNSAxN1oiIGZpbGw9IiMwMDAiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDIyQzIzLjEgMTIgMjQgMTIuOSAyNCAxNEMyNCAxNS4xIDIzLjEgMTYgMjIgMTZIMTRWMjJDMTQgMjMuMSAxMy4xIDI0IDEyIDI0QzEwLjkgMjQgMTAgMjMuMSAxMCAyMlYxNkgyQzAuOSAxNiAwIDE1LjEgMCAxNEMwIDEyLjkgMC45IDEyIDIgMTJIMTBWNEMxMCAyLjkgMTAuOSAyIDEyIDJaIiBmaWxsPSIjMDAwIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+">
     <link rel="manifest"
-        href="data:application/manifest+json;base64,eyJuYW1lIjoiR1BYIE1hcCBWaWV3ZXIiLCJzaG9ydF9uYW1lIjoiR1BYIFZpZXdlciIsImRlc2NyaXB0aW9uIjoiU2ltcGxlIEdQWCBmaWxlIHZpZXdlciB3aXRoIGludGVyYWN0aXZlIG1hcHMiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRreUlpQm9aV2xuYUhROUlqRTVNaUlnZG1sbGQwSnZlRDBpTUNBd0lERTVNaUF4T1RJaUlHWnBiR3c5SW01dmJtVWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStDbkI4Y21WamRDQjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ2NuZzlJalF3SWlCbWFXeHNQU0lqTURCRU5FRkJJaTgrQ2p4emRtY2dlRDBpTkRnaUlIazlJalE0SWlCM2FXUjBhRDBpT1RZaUlHaGxhV2RvZEQwaU9UWWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJekF3TUNJKyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAwMDAwMCIsInRoZW1lX2NvbG9yIjoiIzAwMDAwMCIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQifQ==">
+        href="data:application/manifest+json;base64,eyJuYW1lIjoiTWVuZGFraSIsInNob3J0X25hbWUiOiJNZW5kYWtpIiwiZGVzY3JpcHRpb24iOiJHUFMgdHJhY2sgdmlld2VyIGZvciBHUFgsIEtNTCwgYW5kIFRDWCBmaWxlcyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVGt5SWlCb1pXbG5hSFE5SWpFNU1pSWdkbWxsZDBKdmVEMGlNQ0F3SURFNU1pQXhPVElpSUdacGJHdzlJbTV2Ym1VaUlIaHRiRzV6UFNKb2RIUndPaTh2WkRkM0wzZHpMbmN6TG05eVp5OHlNREF3TDNOMlp5SStDbkI4Y21WamRDQjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ2NuZzlJalF3SWlCbWFXeHNQU0lqTURCRU5FRkJJaTgrQ2p4emRtY2dlRDBpTkRnaUlIazlJalE0SWlCM2FXUjBhRDBpT1RZaUlHaGxhV2RvZEQwaU9UWWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJekF3TUNJKyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAwMDAwMCIsInRoZW1lX2NvbG9yIjoiIzAwMDAwMCIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQifQ==">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
     <div class="app-container">
         <!-- Header -->
         <div class="header">
-            <h1 class="app-title">GPX Map Viewer</h1>
+            <h1 class="app-title">Mendaki</h1>
+            <!-- File Format Guide -->
+            <div class="file-guide" id="fileGuide">
+                <div class="guide-header">
+                    <div class="guide-title">📄 Supported Formats</div>
+                    <button class="guide-close" id="guideClose">×</button>
+                </div>
+                <ul class="format-list">
+                    <li class="format-item">
+                        <div class="format-icon"></div>
+                        <span class="format-name">GPX</span>
+                        <span class="format-desc">GPS tracks from Garmin, Strava</span>
+                    </li>
+                    <li class="format-item">
+                        <div class="format-icon"></div>
+                        <span class="format-name">KML</span>
+                        <span class="format-desc">Google Earth, Maps routes</span>
+                    </li>
+                    <li class="format-item">
+                        <div class="format-icon"></div>
+                        <span class="format-name">TCX</span>
+                        <span class="format-desc">Garmin Training Center</span>
+                    </li>
+                    <li class="format-item">
+                        <div class="format-icon"></div>
+                        <span class="format-name">KMZ</span>
+                        <span class="format-desc">Compressed Google Earth</span>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- Map Container -->
@@ -64,10 +93,10 @@
         <div class="bottom-nav">
             <div class="nav-buttons">
                 <label for="gpxFile" class="nav-btn load-btn">
-                    <div class="icon">📁</div>
-                    <div class="label">Load GPX</div>
+                    <div class="icon">📄</div>
+                    <div class="label">Load Track</div>
                 </label>
-                <input type="file" id="gpxFile" class="file-input" accept=".gpx">
+                <input type="file" id="gpxFile" class="file-input" accept=".gpx,.kml,.tcx,.fit,.kmz">
 
                 <button class="nav-btn location-btn" id="locationBtn">
                     <div class="icon">📍</div>
@@ -78,6 +107,11 @@
                     <div class="icon">🗑</div>
                     <div class="label">Clear All</div>
                 </button>
+
+                <button class="nav-btn help-btn" id="helpBtn">
+                    <div class="icon">❓</div>
+                    <div class="label">Help</div>
+                </button>
             </div>
         </div>
 
@@ -85,12 +119,9 @@
         <div class="loading" id="loading">
             <div class="loading-content">
                 <div class="spinner"></div>
-                <div id="loadingText">Loading GPX file...</div>
+                <div id="loadingText">Loading track file...</div>
             </div>
         </div>
-
-        <!-- Error Toast -->
-        <div class="error-toast" id="errorToast"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>

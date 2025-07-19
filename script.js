@@ -1,5 +1,4 @@
-// script.js
-class GPXViewer {
+class MendakiViewer {
     constructor() {
         this.map = null;
         this.trackLayer = null;
@@ -11,6 +10,7 @@ class GPXViewer {
         this.initializeMap();
         this.bindEvents();
         this.requestLocation();
+        this.registerServiceWorker();
     }
 
     initializeMap() {
@@ -25,9 +25,11 @@ class GPXViewer {
     }
 
     bindEvents() {
-        document.getElementById('gpxFile').addEventListener('change', (e) => this.handleGPXUpload(e));
+        document.getElementById('gpxFile').addEventListener('change', (e) => this.handleFileUpload(e));
         document.getElementById('locationBtn').addEventListener('click', () => this.goToCurrentLocation());
         document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
+        document.getElementById('helpBtn').addEventListener('click', () => this.toggleFileGuide());
+        document.getElementById('guideClose').addEventListener('click', () => this.hideFileGuide());
     }
 
     async requestLocation() {
@@ -135,26 +137,38 @@ class GPXViewer {
         if (this.currentPosition) {
             this.map.setView([this.currentPosition.lat, this.currentPosition.lng], 16);
         } else {
-            this.showError('Current location not available.');
+            console.log('Current location not available');
         }
     }
 
-    async handleGPXUpload(event) {
+    async handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        if (!file.name.toLowerCase().endsWith('.gpx')) {
-            this.showError('Please select a valid GPX file.');
+        const fileName = file.name.toLowerCase();
+        const supportedFormats = ['.gpx', '.kml', '.tcx', '.fit', '.kmz'];
+
+        if (!supportedFormats.some(format => fileName.endsWith(format))) {
+            console.log('Unsupported file format. Please select a GPX, KML, TCX, or FIT file.');
             return;
         }
 
         this.showLoading();
 
         try {
-            const gpxContent = await this.readFile(file);
-            this.parseAndDisplayGPX(gpxContent);
+            const fileContent = await this.readFile(file);
+
+            if (fileName.endsWith('.gpx')) {
+                this.parseAndDisplayGPX(fileContent);
+            } else if (fileName.endsWith('.kml') || fileName.endsWith('.kmz')) {
+                this.parseAndDisplayKML(fileContent);
+            } else if (fileName.endsWith('.tcx')) {
+                this.parseAndDisplayTCX(fileContent);
+            } else if (fileName.endsWith('.fit')) {
+                console.log('FIT file support coming soon');
+            }
         } catch (error) {
-            this.showError('Error reading GPX file: ' + error.message);
+            console.log('Error reading file:', error.message);
         } finally {
             this.hideLoading();
         }
@@ -221,12 +235,14 @@ class GPXViewer {
                         const lat = parseFloat(rtept.getAttribute('lat'));
                         const lon = parseFloat(rtept.getAttribute('lon'));
                         const ele = rtept.querySelector('ele')?.textContent;
+                        const time = rtept.querySelector('time')?.textContent;
 
                         if (!isNaN(lat) && !isNaN(lon)) {
                             routePoints.push({
                                 lat,
                                 lng: lon,
-                                elevation: ele ? parseFloat(ele) : 0
+                                elevation: ele ? parseFloat(ele) : 0,
+                                timestamp: time ? new Date(time) : new Date()
                             });
                         }
                     });
@@ -268,7 +284,135 @@ class GPXViewer {
             this.updateTrackStats(trackSegments);
 
         } catch (error) {
-            this.showError('Error parsing GPX file: ' + error.message);
+            console.log('Error parsing GPX file:', error.message);
+        }
+    }
+
+    parseAndDisplayKML(kmlContent) {
+        try {
+            const parser = new DOMParser();
+            const kmlDoc = parser.parseFromString(kmlContent, 'text/xml');
+
+            if (kmlDoc.querySelector('parsererror')) {
+                throw new Error('Invalid KML format');
+            }
+
+            const trackSegments = [];
+
+            // Parse LineString coordinates (tracks)
+            const lineStrings = kmlDoc.querySelectorAll('LineString coordinates');
+            lineStrings.forEach(lineString => {
+                const coordsText = lineString.textContent.trim();
+                const segmentPoints = [];
+
+                coordsText.split(/\s+/).forEach(coordPair => {
+                    const coords = coordPair.split(',');
+                    if (coords.length >= 2) {
+                        const lng = parseFloat(coords[0]);
+                        const lat = parseFloat(coords[1]);
+                        const elevation = coords[2] ? parseFloat(coords[2]) : 0;
+
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            segmentPoints.push({
+                                lat,
+                                lng,
+                                elevation
+                            });
+                        }
+                    }
+                });
+
+                if (segmentPoints.length > 0) {
+                    trackSegments.push(segmentPoints);
+                }
+            });
+
+            // Parse Point coordinates (waypoints)
+            const points = kmlDoc.querySelectorAll('Point coordinates');
+            if (points.length > 0 && trackSegments.length === 0) {
+                const waypointGroup = [];
+                points.forEach(point => {
+                    const coordsText = point.textContent.trim();
+                    const coords = coordsText.split(',');
+                    if (coords.length >= 2) {
+                        const lng = parseFloat(coords[0]);
+                        const lat = parseFloat(coords[1]);
+                        const elevation = coords[2] ? parseFloat(coords[2]) : 0;
+
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            waypointGroup.push({
+                                lat,
+                                lng,
+                                elevation
+                            });
+                        }
+                    }
+                });
+
+                if (waypointGroup.length > 0) {
+                    trackSegments.push(waypointGroup);
+                }
+            }
+
+            if (trackSegments.length === 0) {
+                throw new Error('No valid GPS points found in KML file');
+            }
+
+            this.displayTrackSegments(trackSegments);
+            this.updateTrackStats(trackSegments);
+
+        } catch (error) {
+            console.log('Error parsing KML file:', error.message);
+        }
+    }
+
+    parseAndDisplayTCX(tcxContent) {
+        try {
+            const parser = new DOMParser();
+            const tcxDoc = parser.parseFromString(tcxContent, 'text/xml');
+
+            if (tcxDoc.querySelector('parsererror')) {
+                throw new Error('Invalid TCX format');
+            }
+
+            const trackSegments = [];
+
+            // Parse TCX trackpoints
+            const trackpoints = tcxDoc.querySelectorAll('Trackpoint');
+            const segmentPoints = [];
+
+            trackpoints.forEach(trackpoint => {
+                const position = trackpoint.querySelector('Position');
+                if (position) {
+                    const lat = parseFloat(position.querySelector('LatitudeDegrees')?.textContent);
+                    const lng = parseFloat(position.querySelector('LongitudeDegrees')?.textContent);
+                    const elevation = parseFloat(trackpoint.querySelector('AltitudeMeters')?.textContent || 0);
+                    const time = trackpoint.querySelector('Time')?.textContent;
+
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        segmentPoints.push({
+                            lat,
+                            lng,
+                            elevation,
+                            timestamp: time ? new Date(time) : new Date()
+                        });
+                    }
+                }
+            });
+
+            if (segmentPoints.length > 0) {
+                trackSegments.push(segmentPoints);
+            }
+
+            if (trackSegments.length === 0) {
+                throw new Error('No valid GPS points found in TCX file');
+            }
+
+            this.displayTrackSegments(trackSegments);
+            this.updateTrackStats(trackSegments);
+
+        } catch (error) {
+            console.log('Error parsing TCX file:', error.message);
         }
     }
 
@@ -298,25 +442,63 @@ class GPXViewer {
             });
             this.trackLayer.addLayer(trackLine);
 
-            // Add start marker for each segment
+            // Enhanced start marker
+            const startIcon = L.divIcon({
+                html: `<div style="
+                    width: 24px; 
+                    height: 24px; 
+                    background: ${colors[segmentIndex % colors.length]}; 
+                    border: 3px solid #fff; 
+                    border-radius: 50%; 
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: #000;
+                ">●</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                className: 'custom-marker'
+            });
+
             const startMarker = L.marker([segment[0].lat, segment[0].lng], {
-                icon: L.divIcon({
-                    html: segmentIndex === 0 ? '🟢' : '🔵',
-                    iconSize: [20, 20],
-                    className: 'emoji-marker'
-                })
-            }).bindPopup(`Segment ${segmentIndex + 1} Start`);
+                icon: startIcon
+            }).bindPopup(`<strong>Track ${segmentIndex + 1} Start</strong><br>
+                Lat: ${segment[0].lat.toFixed(5)}°<br>
+                Lng: ${segment[0].lng.toFixed(5)}°<br>
+                Elevation: ${Math.round(segment[0].elevation || 0)}m`);
             this.trackLayer.addLayer(startMarker);
 
-            // Add end marker for each segment
+            // Enhanced end marker
             const endPoint = segment[segment.length - 1];
+            const endIcon = L.divIcon({
+                html: `<div style="
+                    width: 24px; 
+                    height: 24px; 
+                    background: #fff; 
+                    border: 3px solid ${colors[segmentIndex % colors.length]}; 
+                    border-radius: 4px; 
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: ${colors[segmentIndex % colors.length]};
+                ">■</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                className: 'custom-marker'
+            });
+
             const endMarker = L.marker([endPoint.lat, endPoint.lng], {
-                icon: L.divIcon({
-                    html: segmentIndex === trackSegments.length - 1 ? '🏁' : '🔴',
-                    iconSize: [20, 20],
-                    className: 'emoji-marker'
-                })
-            }).bindPopup(`Segment ${segmentIndex + 1} End`);
+                icon: endIcon
+            }).bindPopup(`<strong>Track ${segmentIndex + 1} End</strong><br>
+                Lat: ${endPoint.lat.toFixed(5)}°<br>
+                Lng: ${endPoint.lng.toFixed(5)}°<br>
+                Elevation: ${Math.round(endPoint.elevation || 0)}m`);
             this.trackLayer.addLayer(endMarker);
         });
 
@@ -413,39 +595,25 @@ class GPXViewer {
         document.getElementById('loading').classList.remove('show');
     }
 
-    showError(message) {
-        const errorToast = document.getElementById('errorToast');
-        errorToast.textContent = message;
-        errorToast.classList.add('show');
-
-        setTimeout(() => {
-            errorToast.classList.remove('show');
-        }, 4000);
+    toggleFileGuide() {
+        const fileGuide = document.getElementById('fileGuide');
+        fileGuide.classList.toggle('show');
     }
 
-    showSuccess(message) {
-        const successToast = document.createElement('div');
-        successToast.className = 'error-toast';
-        successToast.style.background = '#00D4AA';
-        successToast.style.color = '#000';
-        successToast.textContent = message;
-        document.body.appendChild(successToast);
-
-        setTimeout(() => successToast.classList.add('show'), 100);
-        setTimeout(() => {
-            successToast.classList.remove('show');
-            setTimeout(() => document.body.removeChild(successToast), 300);
-        }, 3000);
+    hideFileGuide() {
+        document.getElementById('fileGuide').classList.remove('show');
     }
-}
 
-// Register service worker for PWA functionality
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        const swCode = `
-                    const CACHE_NAME = 'gpx-viewer-v1';
+    registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'mendaki-v1';
                     const urlsToCache = [
                         './',
+                        './index.html',
+                        './style.css',
+                        './script.js',
                         'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css',
                         'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js'
                     ];
@@ -470,16 +638,18 @@ if ('serviceWorker' in navigator) {
                     });
                 `;
 
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(blob);
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
 
-        navigator.serviceWorker.register(swUrl)
-            .then(() => console.log('SW registered'))
-            .catch(() => console.log('SW registration failed'));
-    });
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(() => console.log('Service Worker registration failed'));
+            });
+        }
+    }
 }
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-    new GPXViewer();
+    new MendakiViewer();
 });
