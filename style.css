@@ -323,18 +323,21 @@ body {
 
 /* File Format Guide */
 .file-guide {
-    position: absolute;
-    left: 20px;
-    top: 20px;
-    right: 20px;
-    background: rgba(26, 26, 26, 0.95);
-    border: 1px solid #333;
-    border-radius: 12px;
-    padding: 12px 16px;
-    backdrop-filter: blur(10px);
-    z-index: 999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
+    border: 1px solid #00D4AA;
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(15px);
+    z-index: 1001;
     display: none;
-    max-width: 280px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 30px rgba(0, 212, 170, 0.25);
+    animation: fadeIn 0.3s ease;
 }
 
 .file-guide.show {

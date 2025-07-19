@@ -62,15 +62,22 @@ class MendakiViewer {
     }
 
     handleOutsideClick(event) {
-        const locationOverlay = document.getElementById('locationOverlay');
         const fileGuide = document.getElementById('fileGuide');
         const helpBtn = document.getElementById('helpBtn');
 
-        // If click is outside both overlays and not on help button, hide them
-        if (!locationOverlay.contains(event.target) &&
-            !fileGuide.contains(event.target) &&
-            !helpBtn.contains(event.target)) {
-            this.hideAllOverlays();
+        // If the guide is not shown, do nothing
+        if (!fileGuide.classList.contains('show')) {
+            return;
+        }
+
+        // If the click is on the help button, do nothing
+        if (helpBtn.contains(event.target)) {
+            return;
+        }
+
+        // If the click is outside the file guide, hide it
+        if (!fileGuide.contains(event.target)) {
+            this.hideFileGuide();
         }
     }
 
@@ -721,14 +728,6 @@ class MendakiViewer {
             }
 
             fileGuide.classList.add('show');
-
-            // Auto-hide after 8 seconds
-            if (this.guideTimeout) {
-                clearTimeout(this.guideTimeout);
-            }
-            this.guideTimeout = setTimeout(() => {
-                this.hideFileGuide();
-            }, 8000);
         }
     }
 
