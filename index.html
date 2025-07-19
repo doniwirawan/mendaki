@@ -4,7 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Activity Tracker</title>
+    <title>GPX Map Viewer</title>
+    <meta name="description" content="Simple GPX file viewer with interactive maps">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GPX Viewer">
+    <link rel="icon" type="image/png" sizes="192x192"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDAiIGZpbGw9IiMwMEQ0QUEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIj4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDIyQzIzLjEgMTIgMjQgMTIuOSAyNCAxNEMyNCAxNS4xIDIzLjEgMTYgMjIgMTZIMTRWMjJDMTQgMjMuMSAxMy4xIDI0IDEyIDI0QzEwLjkgMjQgMTAgMjMuMSAxMCAyMlYxNkgyQzAuOSAxNiAwIDE1LjEgMCAxNEMwIDEyLjkgMC45IDEyIDIgMTJIMTBWNEMxMCAyLjkgMTAuOSAyIDEyIDJaIiBmaWxsPSIjMDAwIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDAiIGZpbGw9IiMwMEQ0QUEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDAwIj4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjEySDIyQzIzLjEgMTIgMjQgMTIuOSAyNCAxNEMyNCAxNS4xIDIzLjEgMTYgMjIgMTZIMTRWMjJDMTQgMjMuMSAxMy4xIDI0IDEyIDI0QzEwLjkgMjQgMTAgMjMuMSAxMCAyMlYxNkgyQzAuOSAxNiAwIDE1LjEgMCAxNEMwIDEyLjkgMC45IDEyIDIgMTJIMTBWNEMxMCAyLjkgMTAuOSAyIDEyIDJaIiBmaWxsPSIjMDAwIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+">
+    <link rel="manifest"
+        href="data:application/manifest+json;base64,eyJuYW1lIjoiR1BYIE1hcCBWaWV3ZXIiLCJzaG9ydF9uYW1lIjoiR1BYIFZpZXdlciIsImRlc2NyaXB0aW9uIjoiU2ltcGxlIEdQWCBmaWxlIHZpZXdlciB3aXRoIGludGVyYWN0aXZlIG1hcHMiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRreUlpQm9aV2xuYUhROUlqRTVNaUlnZG1sbGQwSnZlRDBpTUNBd0lERTVNaUF4T1RJaUlHWnBiR3c5SW01dmJtVWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStDbkI4Y21WamRDQjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ2NuZzlJalF3SWlCbWFXeHNQU0lqTURCRU5FRkJJaTgrQ2p4emRtY2dlRDBpTkRnaUlIazlJalE0SWlCM2FXUjBhRDBpT1RZaUlHaGxhV2RvZEQwaU9UWWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJekF3TUNJKyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAwMDAwMCIsInRoZW1lX2NvbG9yIjoiIzAwMDAwMCIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQifQ==">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <style>
         * {
@@ -17,57 +28,61 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: #000;
             color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .app-container {
-            max-width: 100%;
-            margin: 0 auto;
-            background: #000;
-            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
         /* Header */
         .header {
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            padding: 60px 20px 20px;
+            padding: 50px 20px 15px;
             text-align: center;
             border-bottom: 1px solid #333;
-            position: relative;
+            flex-shrink: 0;
         }
 
         .app-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
 
-        .datetime {
-            font-size: 0.9rem;
-            color: #888;
-            font-weight: 400;
-        }
-
-        /* Status Bar */
-        .status-container {
-            padding: 0 20px;
-            margin-top: -10px;
-        }
-
-        .location-status {
+        /* Map Container - takes remaining space */
+        .map-container {
+            flex: 1;
+            position: relative;
             background: #1a1a1a;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Location Status Overlay */
+        .location-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
             border: 1px solid #333;
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 15px;
+            padding: 12px 16px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
             display: none;
         }
 
-        .location-status.active {
+        .location-overlay.active {
             display: block;
         }
 
@@ -75,37 +90,37 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .location-icon {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             background: #00D4AA;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 10px;
         }
 
         .location-text {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #fff;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .location-coords {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 8px;
+            font-size: 0.75rem;
+            color: #ccc;
+            margin-bottom: 6px;
         }
 
         .accuracy-badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -125,295 +140,137 @@
             color: #DC3545;
         }
 
-        .activity-status {
-            background: #1a1a1a;
+        /* Track Info Overlay */
+        .track-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
             border: 1px solid #333;
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 20px;
-            text-align: center;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
             display: none;
         }
 
-        .activity-status.active {
+        .track-info.active {
             display: block;
-            border-color: #00D4AA;
-            background: rgba(0, 212, 170, 0.1);
         }
 
-        .activity-status.recording {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-        }
-
-        /* Main Controls */
-        .main-controls {
-            padding: 0 20px 20px;
-            display: flex;
+        .track-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
 
-        .control-btn {
+        .track-stat {
+            text-align: center;
+        }
+
+        .track-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #00D4AA;
+            display: block;
+        }
+
+        .track-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* Bottom Navigation - Instagram Style */
+        .bottom-nav {
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            padding: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-btn {
             flex: 1;
             height: 56px;
             border: none;
             border-radius: 16px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 4px;
             position: relative;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .control-btn:active {
-            transform: scale(0.98);
+        .nav-btn:active {
+            transform: scale(0.95);
         }
 
-        .control-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
+        .nav-btn .icon {
+            font-size: 1.4rem;
+            line-height: 1;
         }
 
-        .start-btn {
+        .nav-btn .label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* Load GPX Button - Primary */
+        .load-btn {
             background: #00D4AA;
             color: #000;
             font-weight: 700;
         }
 
-        .start-btn:hover:not(:disabled) {
+        .load-btn:hover {
             background: #00BF96;
         }
 
-        .pause-btn {
-            background: #FFC107;
-            color: #000;
-            font-weight: 700;
-        }
-
-        .pause-btn:hover:not(:disabled) {
-            background: #E0A800;
-        }
-
-        .stop-btn {
-            background: #DC3545;
+        /* Secondary Buttons */
+        .location-btn,
+        .clear-btn {
+            background: #2d2d2d;
             color: #fff;
-            font-weight: 700;
+            border: 1px solid #444;
         }
 
-        .stop-btn:hover:not(:disabled) {
-            background: #C82333;
-        }
-
-        /* Secondary Controls */
-        .secondary-controls {
-            padding: 0 20px 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .secondary-btn {
-            height: 48px;
-            border: 1px solid #333;
-            border-radius: 12px;
-            background: #1a1a1a;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .secondary-btn:hover {
+        .location-btn:hover,
+        .clear-btn:hover {
+            background: #3d3d3d;
             border-color: #00D4AA;
-            background: rgba(0, 212, 170, 0.1);
-        }
-
-        .secondary-btn:active {
-            transform: scale(0.98);
         }
 
         .file-input {
             display: none;
         }
 
-        /* Map Container */
-        .map-container {
-            margin: 0 20px 20px;
-            border-radius: 16px;
-            overflow: hidden;
-            height: 300px;
-            border: 1px solid #333;
-            position: relative;
-        }
-
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-
-        /* Stats Grid */
-        .stats-section {
-            padding: 0 20px 20px;
-        }
-
-        .stats-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-
-        .stat-card:hover {
-            border-color: #00D4AA;
-            background: rgba(0, 212, 170, 0.05);
-        }
-
-        .stat-value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #00D4AA;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Activity Log */
-        .log-section {
-            padding: 0 20px 20px;
-        }
-
-        .log-container {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        .log-entry {
-            padding: 12px 16px;
-            border-bottom: 1px solid #333;
-            font-size: 0.85rem;
-            color: #ccc;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .log-entry:last-child {
-            border-bottom: none;
-        }
-
-        .log-time {
-            color: #888;
-            font-size: 0.75rem;
-            min-width: 60px;
-        }
-
-        /* Export Section */
-        .export-section {
-            padding: 0 20px 40px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .export-btn {
-            height: 48px;
-            border: none;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .export-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .export-btn:active:not(:disabled) {
-            transform: scale(0.98);
-        }
-
-        .export-gpx {
-            background: #00D4AA;
-            color: #000;
-            font-weight: 700;
-        }
-
-        .export-gpx:hover:not(:disabled) {
-            background: #00BF96;
-        }
-
-        .export-share {
-            background: #1a1a1a;
-            border: 1px solid #00D4AA;
-            color: #00D4AA;
-        }
-
-        .export-share:hover:not(:disabled) {
-            background: rgba(0, 212, 170, 0.1);
-        }
-
-        /* Loading & Error */
+        /* Loading Overlay */
         .loading {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: none;
             align-items: center;
             justify-content: center;
@@ -428,15 +285,15 @@
             background: #1a1a1a;
             border: 1px solid #333;
             border-radius: 16px;
-            padding: 24px;
+            padding: 32px;
             text-align: center;
             max-width: 280px;
             width: 90%;
         }
 
         .spinner {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border: 3px solid #333;
             border-top: 3px solid #00D4AA;
             border-radius: 50%;
@@ -454,9 +311,10 @@
             }
         }
 
+        /* Error Toast */
         .error-toast {
             position: fixed;
-            top: 80px;
+            top: 100px;
             left: 20px;
             right: 20px;
             background: #DC3545;
@@ -467,57 +325,14 @@
             transition: transform 0.3s ease;
             z-index: 9999;
             font-weight: 500;
+            box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
         }
 
         .error-toast.show {
             transform: translateY(0);
         }
 
-        /* iOS-style switches and improved mobile experience */
-        @media (max-width: 480px) {
-            .header {
-                padding: 50px 16px 16px;
-            }
-
-            .app-title {
-                font-size: 1.6rem;
-            }
-
-            .status-container,
-            .main-controls,
-            .secondary-controls,
-            .stats-section,
-            .log-section,
-            .export-section {
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-
-            .map-container {
-                margin: 0 16px 20px;
-                height: 250px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-
-            .stat-card {
-                padding: 12px;
-            }
-
-            .stat-value {
-                font-size: 1.2rem;
-            }
-
-            .control-btn {
-                height: 52px;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Dark mode optimizations */
+        /* Dark mode optimizations for Leaflet */
         .leaflet-popup-content-wrapper {
             background: #1a1a1a;
             color: #fff;
@@ -540,65 +355,61 @@
             border-color: #00D4AA;
         }
 
-        /* Custom scrollbar */
-        .log-container::-webkit-scrollbar {
-            width: 4px;
+        .leaflet-control-attribution {
+            background: rgba(26, 26, 26, 0.8);
+            color: #ccc;
         }
 
-        .log-container::-webkit-scrollbar-track {
-            background: #333;
-            border-radius: 2px;
-        }
-
-        .log-container::-webkit-scrollbar-thumb {
-            background: #666;
-            border-radius: 2px;
-        }
-
-        .log-container::-webkit-scrollbar-thumb:hover {
-            background: #888;
-        }
-
-        /* Improved touch targets */
-        .control-btn,
-        .secondary-btn,
-        .export-btn {
-            min-height: 44px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Status indicator dots */
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
-
-        .status-dot.recording {
-            background: #DC3545;
-            animation: blink 1s infinite;
-        }
-
-        .status-dot.paused {
-            background: #FFC107;
-        }
-
-        .status-dot.ready {
-            background: #00D4AA;
-        }
-
-        @keyframes blink {
-
-            0%,
-            50% {
-                opacity: 1;
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .header {
+                padding: 45px 16px 12px;
             }
 
-            51%,
-            100% {
-                opacity: 0.3;
+            .app-title {
+                font-size: 1.3rem;
+            }
+
+            .location-overlay,
+            .track-info {
+                left: 16px;
+                right: 16px;
+            }
+
+            .track-info {
+                bottom: 16px;
+            }
+
+            .bottom-nav {
+                padding: 16px;
+            }
+
+            .nav-btn {
+                height: 52px;
+            }
+
+            .nav-btn .icon {
+                font-size: 1.2rem;
+            }
+
+            .nav-btn .label {
+                font-size: 0.65rem;
+            }
+
+            .track-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+        }
+
+        /* Safe area for iOS */
+        @supports (padding: max(0px)) {
+            .header {
+                padding-top: max(50px, env(safe-area-inset-top) + 10px);
+            }
+
+            .bottom-nav {
+                padding-bottom: max(20px, env(safe-area-inset-bottom) + 10px);
             }
         }
     </style>
@@ -606,13 +417,17 @@
 
 <body>
     <div class="app-container">
+        <!-- Header -->
         <div class="header">
-            <h1 class="app-title">GPS Tracker</h1>
-            <div class="datetime" id="datetime"></div>
+            <h1 class="app-title">GPX Map Viewer</h1>
         </div>
 
-        <div class="status-container">
-            <div class="location-status" id="locationStatus">
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+
+            <!-- Location Status Overlay -->
+            <div class="location-overlay" id="locationOverlay">
                 <div class="location-header">
                     <div class="location-icon">📍</div>
                     <div class="location-text">Current Location</div>
@@ -621,102 +436,51 @@
                 <div class="accuracy-badge" id="accuracyBadge">GPS Accuracy: Unknown</div>
             </div>
 
-            <div class="activity-status" id="activityStatus">
-                <div id="statusText">Ready to track your activity</div>
-            </div>
-        </div>
-
-        <div class="main-controls">
-            <button class="control-btn start-btn" id="startBtn">
-                <span>▶</span>
-                <span>Start</span>
-            </button>
-            <button class="control-btn pause-btn" id="pauseBtn" disabled>
-                <span>⏸</span>
-                <span>Pause</span>
-            </button>
-            <button class="control-btn stop-btn" id="stopBtn" disabled>
-                <span>⏹</span>
-                <span>Stop</span>
-            </button>
-        </div>
-
-        <div class="secondary-controls">
-            <button class="secondary-btn" id="locationBtn">
-                <span>📍</span>
-                <span>My Location</span>
-            </button>
-            <label for="gpxFile" class="secondary-btn">
-                <span>📁</span>
-                <span>Load GPX</span>
-            </label>
-            <input type="file" id="gpxFile" class="file-input" accept=".gpx">
-            <button class="secondary-btn" id="clearBtn">
-                <span>🗑</span>
-                <span>Clear All</span>
-            </button>
-        </div>
-
-        <div class="map-container">
-            <div id="map"></div>
-        </div>
-
-        <div class="stats-section">
-            <h3 class="stats-title">Activity Stats</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-value" id="liveDistance">0.00</span>
-                    <span class="stat-label">Distance (km)</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="liveTime">00:00:00</span>
-                    <span class="stat-label">Duration</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="liveSpeed">0.0</span>
-                    <span class="stat-label">Speed (km/h)</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="livePace">--:--</span>
-                    <span class="stat-label">Pace (min/km)</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="liveElevation">0</span>
-                    <span class="stat-label">Elevation (m)</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-value" id="livePoints">0</span>
-                    <span class="stat-label">GPS Points</span>
+            <!-- Track Info Overlay -->
+            <div class="track-info" id="trackInfo">
+                <div class="track-stats">
+                    <div class="track-stat">
+                        <span class="track-value" id="trackDistance">0.00</span>
+                        <span class="track-label">Distance (km)</span>
+                    </div>
+                    <div class="track-stat">
+                        <span class="track-value" id="trackPoints">0</span>
+                        <span class="track-label">GPS Points</span>
+                    </div>
+                    <div class="track-stat">
+                        <span class="track-value" id="trackElevation">0</span>
+                        <span class="track-label">Max Elev (m)</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="log-section">
-            <h3 class="stats-title">Activity Log</h3>
-            <div class="log-container" id="logContainer">
-                <div class="log-entry">
-                    <span class="log-time">--:--</span>
-                    <span>Ready to start tracking...</span>
-                </div>
-            </div>
-        </div>
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-buttons">
+                <label for="gpxFile" class="nav-btn load-btn">
+                    <div class="icon">📁</div>
+                    <div class="label">Load GPX</div>
+                </label>
+                <input type="file" id="gpxFile" class="file-input" accept=".gpx">
 
-        <div class="export-section">
-            <button class="export-btn export-gpx" id="exportGpxBtn" disabled>
-                <span>📤</span>
-                <span>Export GPX</span>
-            </button>
-            <button class="export-btn export-share" id="shareBtn" disabled>
-                <span>📱</span>
-                <span>Share</span>
-            </button>
+                <button class="nav-btn location-btn" id="locationBtn">
+                    <div class="icon">📍</div>
+                    <div class="label">My Location</div>
+                </button>
+
+                <button class="nav-btn clear-btn" id="clearBtn">
+                    <div class="icon">🗑</div>
+                    <div class="label">Clear All</div>
+                </button>
+            </div>
         </div>
 
         <!-- Loading Overlay -->
         <div class="loading" id="loading">
             <div class="loading-content">
                 <div class="spinner"></div>
-                <div id="loadingText">Processing...</div>
+                <div id="loadingText">Loading GPX file...</div>
             </div>
         </div>
 
@@ -726,33 +490,24 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
-        class ActivityTracker {
+        class GPXViewer {
             constructor() {
                 this.map = null;
                 this.trackLayer = null;
                 this.currentLocationMarker = null;
                 this.watchId = null;
-
-                // Tracking state
-                this.isTracking = false;
-                this.isPaused = false;
-                this.trackingData = [];
-                this.startTime = null;
-                this.pausedTime = 0;
-
-                // Current position
                 this.currentPosition = null;
+                this.trackData = [];
 
                 this.initializeMap();
                 this.bindEvents();
-                this.startClock();
                 this.requestLocation();
             }
 
             initializeMap() {
-                this.map = L.map('map').setView([40.7128, -74.0060], 15);
+                this.map = L.map('map').setView([40.7128, -74.0060], 10);
 
-                // Only OpenStreetMap as requested
+                // OpenStreetMap layer
                 this.osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 });
@@ -761,38 +516,13 @@
             }
 
             bindEvents() {
-                // Main controls
-                document.getElementById('startBtn').addEventListener('click', () => this.startTracking());
-                document.getElementById('pauseBtn').addEventListener('click', () => this.pauseTracking());
-                document.getElementById('stopBtn').addEventListener('click', () => this.stopTracking());
-
-                // Secondary controls
-                document.getElementById('locationBtn').addEventListener('click', () => this.goToCurrentLocation());
                 document.getElementById('gpxFile').addEventListener('change', (e) => this.handleGPXUpload(e));
+                document.getElementById('locationBtn').addEventListener('click', () => this.goToCurrentLocation());
                 document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
-
-                // Export controls
-                document.getElementById('exportGpxBtn').addEventListener('click', () => this.exportGPX());
-                document.getElementById('shareBtn').addEventListener('click', () => this.shareActivity());
-            }
-
-            startClock() {
-                setInterval(() => {
-                    const now = new Date();
-                    const options = {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    };
-                    document.getElementById('datetime').textContent = now.toLocaleDateString('en-US', options);
-                }, 1000);
             }
 
             async requestLocation() {
                 if (!navigator.geolocation) {
-                    this.showError('Geolocation is not supported by this browser.');
                     return;
                 }
 
@@ -802,7 +532,7 @@
 
                     this.watchId = navigator.geolocation.watchPosition(
                         (position) => this.handleLocationUpdate(position),
-                        (error) => this.handleLocationError(error),
+                        (error) => console.log('Location error:', error),
                         {
                             enableHighAccuracy: true,
                             timeout: 10000,
@@ -810,7 +540,7 @@
                         }
                     );
                 } catch (error) {
-                    this.handleLocationError(error);
+                    console.log('Location error:', error);
                 }
             }
 
@@ -826,57 +556,32 @@
 
             handleLocationUpdate(position) {
                 const { latitude, longitude, accuracy, altitude } = position.coords;
-                const timestamp = new Date(position.timestamp);
 
                 this.currentPosition = {
                     lat: latitude,
                     lng: longitude,
                     accuracy: accuracy,
-                    elevation: altitude || 0,
-                    timestamp: timestamp
+                    elevation: altitude || 0
                 };
 
                 this.updateLocationDisplay();
                 this.updateCurrentLocationMarker();
 
-                if (this.isTracking && !this.isPaused) {
-                    this.addTrackPoint(this.currentPosition);
-                }
-
                 // Center map on first location
                 if (!this.hasInitialLocation) {
-                    this.map.setView([latitude, longitude], 16);
+                    this.map.setView([latitude, longitude], 14);
                     this.hasInitialLocation = true;
                 }
-            }
-
-            handleLocationError(error) {
-                let message = 'Location error: ';
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        message += 'Please enable location access in your browser settings.';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        message += 'Location information unavailable.';
-                        break;
-                    case error.TIMEOUT:
-                        message += 'Location request timed out.';
-                        break;
-                    default:
-                        message += 'Unknown location error.';
-                        break;
-                }
-                this.showError(message);
             }
 
             updateLocationDisplay() {
                 if (!this.currentPosition) return;
 
-                const locationStatus = document.getElementById('locationStatus');
+                const locationOverlay = document.getElementById('locationOverlay');
                 const locationCoords = document.getElementById('locationCoords');
                 const accuracyBadge = document.getElementById('accuracyBadge');
 
-                locationStatus.classList.add('active');
+                locationOverlay.classList.add('active');
 
                 const { lat, lng, accuracy, elevation } = this.currentPosition;
                 locationCoords.textContent = `${lat.toFixed(5)}°, ${lng.toFixed(5)}° • ${Math.round(elevation)}m`;
@@ -912,333 +617,14 @@
                     fillOpacity: 0.8,
                     radius: 8,
                     weight: 3
-                });
+                }).bindPopup('Your Location');
 
                 this.currentLocationMarker.addTo(this.map);
-            }
-
-            startTracking() {
-                if (!this.currentPosition) {
-                    this.showError('Waiting for GPS signal. Please enable location and try again.');
-                    return;
-                }
-
-                this.isTracking = true;
-                this.isPaused = false;
-                this.trackingData = [];
-                this.startTime = new Date();
-                this.pausedTime = 0;
-
-                this.addTrackPoint(this.currentPosition);
-
-                // Update UI
-                document.getElementById('startBtn').disabled = true;
-                document.getElementById('pauseBtn').disabled = false;
-                document.getElementById('stopBtn').disabled = false;
-
-                const activityStatus = document.getElementById('activityStatus');
-                const statusText = document.getElementById('statusText');
-                activityStatus.classList.add('active', 'recording');
-                statusText.innerHTML = `<span class="status-dot recording"></span>Recording activity`;
-
-                this.addLogEntry('Activity tracking started');
-                this.startLiveUpdates();
-            }
-
-            pauseTracking() {
-                if (!this.isTracking) return;
-
-                this.isPaused = !this.isPaused;
-                const pauseBtn = document.getElementById('pauseBtn');
-                const activityStatus = document.getElementById('activityStatus');
-                const statusText = document.getElementById('statusText');
-
-                if (this.isPaused) {
-                    pauseBtn.innerHTML = '<span>▶</span><span>Resume</span>';
-                    activityStatus.classList.remove('recording');
-                    statusText.innerHTML = `<span class="status-dot paused"></span>Activity paused`;
-                    this.addLogEntry('Activity paused');
-                } else {
-                    pauseBtn.innerHTML = '<span>⏸</span><span>Pause</span>';
-                    activityStatus.classList.add('recording');
-                    statusText.innerHTML = `<span class="status-dot recording"></span>Recording activity`;
-                    this.addLogEntry('Activity resumed');
-                }
-            }
-
-            stopTracking() {
-                if (!this.isTracking) return;
-
-                this.isTracking = false;
-                this.isPaused = false;
-
-                // Update UI
-                document.getElementById('startBtn').disabled = false;
-                document.getElementById('pauseBtn').disabled = true;
-                document.getElementById('stopBtn').disabled = true;
-                document.getElementById('pauseBtn').innerHTML = '<span>⏸</span><span>Pause</span>';
-
-                const activityStatus = document.getElementById('activityStatus');
-                const statusText = document.getElementById('statusText');
-                activityStatus.classList.remove('recording');
-                statusText.innerHTML = `<span class="status-dot ready"></span>Activity completed`;
-
-                // Enable export
-                document.getElementById('exportGpxBtn').disabled = false;
-                document.getElementById('shareBtn').disabled = false;
-
-                this.addLogEntry(`Activity completed - ${this.trackingData.length} points recorded`);
-                this.stopLiveUpdates();
-                this.finalizeTrack();
-            }
-
-            addTrackPoint(position) {
-                const trackPoint = {
-                    lat: position.lat,
-                    lng: position.lng,
-                    elevation: position.elevation,
-                    timestamp: position.timestamp
-                };
-
-                this.trackingData.push(trackPoint);
-                this.updateTrackDisplay();
-                this.updateLiveStats();
-            }
-
-            updateTrackDisplay() {
-                if (this.trackingData.length < 2) return;
-
-                if (this.trackLayer) {
-                    this.map.removeLayer(this.trackLayer);
-                }
-
-                this.trackLayer = L.layerGroup();
-
-                const latLngs = this.trackingData.map(point => [point.lat, point.lng]);
-                const trackLine = L.polyline(latLngs, {
-                    color: '#00D4AA',
-                    weight: 4,
-                    opacity: 0.9
-                });
-
-                this.trackLayer.addLayer(trackLine);
-
-                if (this.trackingData.length > 0) {
-                    const startPoint = this.trackingData[0];
-                    const startMarker = L.marker([startPoint.lat, startPoint.lng], {
-                        icon: L.divIcon({
-                            html: '🟢',
-                            iconSize: [20, 20],
-                            className: 'emoji-marker'
-                        })
-                    });
-                    this.trackLayer.addLayer(startMarker);
-                }
-
-                this.trackLayer.addTo(this.map);
-            }
-
-            startLiveUpdates() {
-                this.liveUpdateInterval = setInterval(() => {
-                    if (this.isTracking && !this.isPaused) {
-                        this.updateLiveStats();
-                    }
-                }, 1000);
-            }
-
-            stopLiveUpdates() {
-                if (this.liveUpdateInterval) {
-                    clearInterval(this.liveUpdateInterval);
-                }
-            }
-
-            updateLiveStats() {
-                if (!this.isTracking || this.trackingData.length === 0) return;
-
-                // Calculate distance
-                let totalDistance = 0;
-                for (let i = 1; i < this.trackingData.length; i++) {
-                    const prev = this.trackingData[i - 1];
-                    const curr = this.trackingData[i];
-                    totalDistance += this.calculateDistance(prev.lat, prev.lng, curr.lat, curr.lng);
-                }
-
-                // Calculate time
-                const now = new Date();
-                const elapsedTime = this.isPaused ?
-                    this.pausedTime :
-                    (now - this.startTime - this.pausedTime) / 1000;
-
-                // Calculate speed and pace
-                const speed = elapsedTime > 0 ? (totalDistance / 1000) / (elapsedTime / 3600) : 0;
-                const pace = speed > 0 ? 60 / speed : 0;
-
-                // Get current elevation
-                const currentElevation = this.currentPosition ? this.currentPosition.elevation : 0;
-
-                // Update display
-                document.getElementById('liveDistance').textContent = (totalDistance / 1000).toFixed(2);
-                document.getElementById('liveTime').textContent = this.formatTime(elapsedTime);
-                document.getElementById('liveSpeed').textContent = speed.toFixed(1);
-                document.getElementById('livePace').textContent = pace < 60 ? this.formatPace(pace) : '--:--';
-                document.getElementById('liveElevation').textContent = Math.round(currentElevation);
-                document.getElementById('livePoints').textContent = this.trackingData.length;
-            }
-
-            formatTime(seconds) {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                const secs = Math.floor(seconds % 60);
-                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-
-            formatPace(pace) {
-                const minutes = Math.floor(pace);
-                const seconds = Math.floor((pace - minutes) * 60);
-                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-
-            calculateDistance(lat1, lng1, lat2, lng2) {
-                const R = 6371000; // Earth's radius in meters
-                const dLat = this.toRadians(lat2 - lat1);
-                const dLng = this.toRadians(lng2 - lng1);
-                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
-                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                return R * c;
-            }
-
-            toRadians(degrees) {
-                return degrees * (Math.PI / 180);
-            }
-
-            finalizeTrack() {
-                if (this.trackingData.length === 0) return;
-
-                // Add finish marker
-                const endPoint = this.trackingData[this.trackingData.length - 1];
-                const endMarker = L.marker([endPoint.lat, endPoint.lng], {
-                    icon: L.divIcon({
-                        html: '🏁',
-                        iconSize: [20, 20],
-                        className: 'emoji-marker'
-                    })
-                });
-
-                if (this.trackLayer) {
-                    this.trackLayer.addLayer(endMarker);
-                }
-
-                // Fit map to track bounds
-                if (this.trackingData.length > 1) {
-                    const bounds = L.latLngBounds(this.trackingData.map(p => [p.lat, p.lng]));
-                    this.map.fitBounds(bounds, { padding: [20, 20] });
-                }
-            }
-
-            exportGPX() {
-                if (this.trackingData.length === 0) {
-                    this.showError('No activity data to export.');
-                    return;
-                }
-
-                const gpxContent = this.generateGPX();
-                const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
-                const url = URL.createObjectURL(blob);
-
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `activity_${new Date().toISOString().split('T')[0]}.gpx`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                this.addLogEntry('GPX file exported successfully');
-            }
-
-            generateGPX() {
-                const startTime = this.startTime.toISOString();
-                let gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
-<gpx version="1.1" creator="GPS Activity Tracker" xmlns="http://www.topografix.com/GPX/1/1">
-  <metadata>
-    <name>Activity Track</name>
-    <time>${startTime}</time>
-  </metadata>
-  <trk>
-    <name>Activity ${new Date().toLocaleDateString()}</name>
-    <trkseg>`;
-
-                this.trackingData.forEach(point => {
-                    gpxContent += `
-      <trkpt lat="${point.lat}" lon="${point.lng}">
-        <ele>${point.elevation}</ele>
-        <time>${point.timestamp.toISOString()}</time>
-      </trkpt>`;
-                });
-
-                gpxContent += `
-    </trkseg>
-  </trk>
-</gpx>`;
-
-                return gpxContent;
-            }
-
-            shareActivity() {
-                if (this.trackingData.length === 0) {
-                    this.showError('No activity data to share.');
-                    return;
-                }
-
-                // Calculate summary stats
-                let totalDistance = 0;
-                for (let i = 1; i < this.trackingData.length; i++) {
-                    const prev = this.trackingData[i - 1];
-                    const curr = this.trackingData[i];
-                    totalDistance += this.calculateDistance(prev.lat, prev.lng, curr.lat, curr.lng);
-                }
-
-                const duration = this.trackingData.length > 0 ?
-                    (this.trackingData[this.trackingData.length - 1].timestamp - this.trackingData[0].timestamp) / 1000 : 0;
-                const avgSpeed = duration > 0 ? (totalDistance / 1000) / (duration / 3600) : 0;
-
-                const shareText = `🏃‍♂️ Just completed an activity!
-📏 ${(totalDistance / 1000).toFixed(2)} km
-⏱️ ${this.formatTime(duration)}
-🚀 ${avgSpeed.toFixed(1)} km/h avg
-📍 ${this.trackingData.length} GPS points
-
-Tracked with GPS Activity Tracker 📱`;
-
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'My Activity',
-                        text: shareText
-                    }).then(() => {
-                        this.addLogEntry('Activity shared successfully');
-                    }).catch(() => {
-                        this.fallbackShare(shareText);
-                    });
-                } else {
-                    this.fallbackShare(shareText);
-                }
-            }
-
-            fallbackShare(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    this.showSuccess('Activity summary copied to clipboard!');
-                    this.addLogEntry('Activity summary copied to clipboard');
-                }).catch(() => {
-                    alert(`Share your activity:\n\n${text}`);
-                });
             }
 
             goToCurrentLocation() {
                 if (this.currentPosition) {
                     this.map.setView([this.currentPosition.lat, this.currentPosition.lng], 16);
-                    this.addLogEntry('Centered on current location');
                 } else {
                     this.showError('Current location not available.');
                 }
@@ -1253,12 +639,11 @@ Tracked with GPS Activity Tracker 📱`;
                     return;
                 }
 
-                this.showLoading('Loading GPX file...');
+                this.showLoading();
 
                 try {
                     const gpxContent = await this.readFile(file);
                     this.parseAndDisplayGPX(gpxContent);
-                    this.addLogEntry(`Loaded GPX: ${file.name}`);
                 } catch (error) {
                     this.showError('Error reading GPX file: ' + error.message);
                 } finally {
@@ -1284,198 +669,235 @@ Tracked with GPS Activity Tracker 📱`;
                         throw new Error('Invalid GPX format');
                     }
 
-                    const trackPoints = [];
-                    const trkpts = gpxDoc.querySelectorAll('trkpt');
+                    const trackSegments = [];
 
-                    if (trkpts.length === 0) {
+                    // Parse tracks with multiple segments
+                    const tracks = gpxDoc.querySelectorAll('trk');
+                    tracks.forEach(track => {
+                        const segments = track.querySelectorAll('trkseg');
+                        segments.forEach(segment => {
+                            const segmentPoints = [];
+                            const trkpts = segment.querySelectorAll('trkpt');
+
+                            trkpts.forEach(trkpt => {
+                                const lat = parseFloat(trkpt.getAttribute('lat'));
+                                const lon = parseFloat(trkpt.getAttribute('lon'));
+                                const ele = trkpt.querySelector('ele')?.textContent;
+                                const time = trkpt.querySelector('time')?.textContent;
+
+                                if (!isNaN(lat) && !isNaN(lon)) {
+                                    segmentPoints.push({
+                                        lat,
+                                        lng: lon,
+                                        elevation: ele ? parseFloat(ele) : 0,
+                                        timestamp: time ? new Date(time) : new Date()
+                                    });
+                                }
+                            });
+
+                            if (segmentPoints.length > 0) {
+                                trackSegments.push(segmentPoints);
+                            }
+                        });
+                    });
+
+                    // If no tracks, try routes
+                    if (trackSegments.length === 0) {
+                        const routes = gpxDoc.querySelectorAll('rte');
+                        routes.forEach(route => {
+                            const routePoints = [];
+                            const rtepts = route.querySelectorAll('rtept');
+
+                            rtepts.forEach(rtept => {
+                                const lat = parseFloat(rtept.getAttribute('lat'));
+                                const lon = parseFloat(rtept.getAttribute('lon'));
+                                const ele = rtept.querySelector('ele')?.textContent;
+
+                                if (!isNaN(lat) && !isNaN(lon)) {
+                                    routePoints.push({
+                                        lat,
+                                        lng: lon,
+                                        elevation: ele ? parseFloat(ele) : 0
+                                    });
+                                }
+                            });
+
+                            if (routePoints.length > 0) {
+                                trackSegments.push(routePoints);
+                            }
+                        });
+                    }
+
+                    // If no tracks or routes, try waypoints
+                    if (trackSegments.length === 0) {
+                        const waypointGroup = [];
                         const waypoints = gpxDoc.querySelectorAll('wpt');
                         waypoints.forEach(wpt => {
                             const lat = parseFloat(wpt.getAttribute('lat'));
                             const lon = parseFloat(wpt.getAttribute('lon'));
                             const ele = wpt.querySelector('ele')?.textContent;
-                            const time = wpt.querySelector('time')?.textContent;
 
-                            trackPoints.push({
-                                lat,
-                                lng: lon,
-                                elevation: ele ? parseFloat(ele) : 0,
-                                timestamp: time ? new Date(time) : new Date()
-                            });
+                            if (!isNaN(lat) && !isNaN(lon)) {
+                                waypointGroup.push({
+                                    lat,
+                                    lng: lon,
+                                    elevation: ele ? parseFloat(ele) : 0
+                                });
+                            }
                         });
-                    } else {
-                        trkpts.forEach(trkpt => {
-                            const lat = parseFloat(trkpt.getAttribute('lat'));
-                            const lon = parseFloat(trkpt.getAttribute('lon'));
-                            const ele = trkpt.querySelector('ele')?.textContent;
-                            const time = trkpt.querySelector('time')?.textContent;
 
-                            trackPoints.push({
-                                lat,
-                                lng: lon,
-                                elevation: ele ? parseFloat(ele) : 0,
-                                timestamp: time ? new Date(time) : new Date()
-                            });
-                        });
+                        if (waypointGroup.length > 0) {
+                            trackSegments.push(waypointGroup);
+                        }
                     }
 
-                    if (trackPoints.length === 0) {
+                    if (trackSegments.length === 0) {
                         throw new Error('No valid GPS points found in GPX file');
                     }
 
-                    this.displayLoadedTrack(trackPoints);
-                    this.updateLoadedTrackStats(trackPoints);
+                    this.displayTrackSegments(trackSegments);
+                    this.updateTrackStats(trackSegments);
 
                 } catch (error) {
                     this.showError('Error parsing GPX file: ' + error.message);
                 }
             }
 
-            displayLoadedTrack(trackPoints) {
+            displayTrackSegments(trackSegments) {
+                // Clear existing tracks
                 if (this.trackLayer) {
                     this.map.removeLayer(this.trackLayer);
                 }
 
                 this.trackLayer = L.layerGroup();
+                const allBounds = [];
 
-                const latLngs = trackPoints.map(point => [point.lat, point.lng]);
-                const trackLine = L.polyline(latLngs, {
-                    color: '#00D4AA',
-                    weight: 4,
-                    opacity: 0.8
-                });
-                this.trackLayer.addLayer(trackLine);
+                // Color variations for different segments
+                const colors = ['#00D4AA', '#FFC107', '#DC3545', '#2196F3', '#9C27B0'];
 
-                if (trackPoints.length > 0) {
-                    const startMarker = L.marker([trackPoints[0].lat, trackPoints[0].lng], {
+                trackSegments.forEach((segment, segmentIndex) => {
+                    if (segment.length === 0) return;
+
+                    const latLngs = segment.map(point => [point.lat, point.lng]);
+                    allBounds.push(...latLngs);
+
+                    // Create polyline for this segment
+                    const trackLine = L.polyline(latLngs, {
+                        color: colors[segmentIndex % colors.length],
+                        weight: 4,
+                        opacity: 0.8
+                    });
+                    this.trackLayer.addLayer(trackLine);
+
+                    // Add start marker for each segment
+                    const startMarker = L.marker([segment[0].lat, segment[0].lng], {
                         icon: L.divIcon({
-                            html: '🟢',
+                            html: segmentIndex === 0 ? '🟢' : '🔵',
                             iconSize: [20, 20],
                             className: 'emoji-marker'
                         })
-                    });
-
-                    const endMarker = L.marker([trackPoints[trackPoints.length - 1].lat, trackPoints[trackPoints.length - 1].lng], {
-                        icon: L.divIcon({
-                            html: '🏁',
-                            iconSize: [20, 20],
-                            className: 'emoji-marker'
-                        })
-                    });
-
+                    }).bindPopup(`Segment ${segmentIndex + 1} Start`);
                     this.trackLayer.addLayer(startMarker);
+
+                    // Add end marker for each segment
+                    const endPoint = segment[segment.length - 1];
+                    const endMarker = L.marker([endPoint.lat, endPoint.lng], {
+                        icon: L.divIcon({
+                            html: segmentIndex === trackSegments.length - 1 ? '🏁' : '🔴',
+                            iconSize: [20, 20],
+                            className: 'emoji-marker'
+                        })
+                    }).bindPopup(`Segment ${segmentIndex + 1} End`);
                     this.trackLayer.addLayer(endMarker);
-                }
+                });
 
                 this.trackLayer.addTo(this.map);
 
-                const bounds = L.latLngBounds(latLngs);
-                this.map.fitBounds(bounds, { padding: [20, 20] });
+                // Fit bounds to all segments
+                if (allBounds.length > 0) {
+                    const bounds = L.latLngBounds(allBounds);
+                    this.map.fitBounds(bounds, { padding: [20, 20] });
+                }
 
-                // Enable export for loaded track
-                document.getElementById('exportGpxBtn').disabled = false;
-                document.getElementById('shareBtn').disabled = false;
+                // Store track data
+                this.trackData = trackSegments;
             }
 
-            updateLoadedTrackStats(trackPoints) {
+            updateTrackStats(trackSegments) {
                 let totalDistance = 0;
-                for (let i = 1; i < trackPoints.length; i++) {
-                    const prev = trackPoints[i - 1];
-                    const curr = trackPoints[i];
+                let maxElevation = 0;
+                let totalPoints = 0;
+
+                // Flatten all segments for stats
+                const allPoints = [];
+                trackSegments.forEach(segment => {
+                    allPoints.push(...segment);
+                    totalPoints += segment.length;
+                });
+
+                if (allPoints.length === 0) return;
+
+                // Calculate distance and elevation
+                for (let i = 1; i < allPoints.length; i++) {
+                    const prev = allPoints[i - 1];
+                    const curr = allPoints[i];
                     totalDistance += this.calculateDistance(prev.lat, prev.lng, curr.lat, curr.lng);
+                    maxElevation = Math.max(maxElevation, curr.elevation || 0);
                 }
 
-                const maxElevation = Math.max(...trackPoints.map(p => p.elevation || 0));
+                // Update track info display
+                document.getElementById('trackDistance').textContent = (totalDistance / 1000).toFixed(2);
+                document.getElementById('trackPoints').textContent = totalPoints.toLocaleString();
+                document.getElementById('trackElevation').textContent = Math.round(maxElevation);
 
-                let duration = 0;
-                const validTimes = trackPoints.filter(p => p.timestamp);
-                if (validTimes.length > 1) {
-                    const startTime = validTimes[0].timestamp;
-                    const endTime = validTimes[validTimes.length - 1].timestamp;
-                    duration = (endTime - startTime) / 1000;
-                }
+                // Show track info overlay
+                document.getElementById('trackInfo').classList.add('active');
+            }
 
-                const avgSpeed = duration > 0 ? (totalDistance / 1000) / (duration / 3600) : 0;
-                const pace = avgSpeed > 0 ? 60 / avgSpeed : 0;
+            calculateDistance(lat1, lng1, lat2, lng2) {
+                const R = 6371000; // Earth's radius in meters
+                const dLat = this.toRadians(lat2 - lat1);
+                const dLng = this.toRadians(lng2 - lng1);
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
+            }
 
-                document.getElementById('liveDistance').textContent = (totalDistance / 1000).toFixed(2);
-                document.getElementById('liveTime').textContent = this.formatTime(duration);
-                document.getElementById('liveSpeed').textContent = avgSpeed.toFixed(1);
-                document.getElementById('livePace').textContent = pace < 60 ? this.formatPace(pace) : '--:--';
-                document.getElementById('liveElevation').textContent = Math.round(maxElevation);
-                document.getElementById('livePoints').textContent = trackPoints.length;
-
-                // Store loaded track data for export
-                this.trackingData = trackPoints;
-                this.startTime = validTimes.length > 0 ? validTimes[0].timestamp : new Date();
+            toRadians(degrees) {
+                return degrees * (Math.PI / 180);
             }
 
             clearAll() {
-                if (this.isTracking) {
-                    this.stopTracking();
-                }
-
+                // Clear track layer
                 if (this.trackLayer) {
                     this.map.removeLayer(this.trackLayer);
                     this.trackLayer = null;
                 }
 
-                this.trackingData = [];
+                // Reset track data
+                this.trackData = [];
 
+                // Hide track info
+                document.getElementById('trackInfo').classList.remove('active');
+
+                // Reset file input
                 document.getElementById('gpxFile').value = '';
-                document.getElementById('exportGpxBtn').disabled = true;
-                document.getElementById('shareBtn').disabled = true;
 
-                // Reset stats
-                document.getElementById('liveDistance').textContent = '0.00';
-                document.getElementById('liveTime').textContent = '00:00:00';
-                document.getElementById('liveSpeed').textContent = '0.0';
-                document.getElementById('livePace').textContent = '--:--';
-                document.getElementById('liveElevation').textContent = '0';
-                document.getElementById('livePoints').textContent = '0';
+                // Reset track stats
+                document.getElementById('trackDistance').textContent = '0.00';
+                document.getElementById('trackPoints').textContent = '0';
+                document.getElementById('trackElevation').textContent = '0';
 
-                // Reset activity status
-                const activityStatus = document.getElementById('activityStatus');
-                activityStatus.classList.remove('active', 'recording');
-
-                // Clear log
-                document.getElementById('logContainer').innerHTML = `
-                    <div class="log-entry">
-                        <span class="log-time">--:--</span>
-                        <span>Ready to start tracking...</span>
-                    </div>
-                `;
-
-                this.addLogEntry('All data cleared');
-            }
-
-            addLogEntry(message) {
-                const logContainer = document.getElementById('logContainer');
-                const timestamp = new Date().toLocaleTimeString('en-US', {
-                    hour12: false,
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                const entry = document.createElement('div');
-                entry.className = 'log-entry';
-                entry.innerHTML = `
-                    <span class="log-time">${timestamp}</span>
-                    <span>${message}</span>
-                `;
-
-                logContainer.insertBefore(entry, logContainer.firstChild);
-
-                // Keep only last 15 entries
-                while (logContainer.children.length > 15) {
-                    logContainer.removeChild(logContainer.lastChild);
+                // Return to default view if no current location
+                if (!this.currentPosition) {
+                    this.map.setView([40.7128, -74.0060], 10);
                 }
             }
 
-            showLoading(text = 'Processing...') {
-                const loading = document.getElementById('loading');
-                const loadingText = document.getElementById('loadingText');
-                loadingText.textContent = text;
-                loading.classList.add('show');
+            showLoading() {
+                document.getElementById('loading').classList.add('show');
             }
 
             hideLoading() {
@@ -1490,12 +912,9 @@ Tracked with GPS Activity Tracker 📱`;
                 setTimeout(() => {
                     errorToast.classList.remove('show');
                 }, 4000);
-
-                this.addLogEntry(`Error: ${message}`);
             }
 
             showSuccess(message) {
-                // Create a temporary success toast
                 const successToast = document.createElement('div');
                 successToast.className = 'error-toast';
                 successToast.style.background = '#00D4AA';
@@ -1511,9 +930,49 @@ Tracked with GPS Activity Tracker 📱`;
             }
         }
 
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'gpx-viewer-v1';
+                    const urlsToCache = [
+                        './',
+                        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css',
+                        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js'
+                    ];
+
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => {
+                                    if (response) {
+                                        return response;
+                                    }
+                                    return fetch(event.request);
+                                })
+                        );
+                    });
+                `;
+
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('SW registered'))
+                    .catch(() => console.log('SW registration failed'));
+            });
+        }
+
         // Initialize the app
         document.addEventListener('DOMContentLoaded', () => {
-            new ActivityTracker();
+            new GPXViewer();
         });
     </script>
 </body>
