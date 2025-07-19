@@ -16,9 +16,11 @@ class MendakiViewer {
     initializeMap() {
         this.map = L.map('map').setView([40.7128, -74.0060], 10);
 
-        // OpenStreetMap layer
-        this.osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+        // Dark themed OpenStreetMap layer
+        this.osmLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 20
         });
 
         this.osmLayer.addTo(this.map);
@@ -122,13 +124,42 @@ class MendakiViewer {
 
         const { lat, lng } = this.currentPosition;
 
-        this.currentLocationMarker = L.circleMarker([lat, lng], {
-            color: '#00D4AA',
-            fillColor: '#00D4AA',
-            fillOpacity: 0.8,
-            radius: 8,
-            weight: 3
-        }).bindPopup('Your Location');
+        // Enhanced human icon for current location
+        const humanIcon = L.divIcon({
+            html: `<div style="
+                width: 32px; 
+                height: 32px; 
+                background: linear-gradient(135deg, #00D4AA 0%, #00F5CC 100%); 
+                border: 3px solid #fff; 
+                border-radius: 50%; 
+                box-shadow: 0 4px 15px rgba(0, 212, 170, 0.6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                animation: pulse-location 2s infinite;
+            ">🚶</div>
+            <style>
+                @keyframes pulse-location {
+                    0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0, 212, 170, 0.6); }
+                    50% { transform: scale(1.1); box-shadow: 0 6px 20px rgba(0, 212, 170, 0.8); }
+                }
+            </style>`,
+            iconSize: [38, 38],
+            iconAnchor: [19, 19],
+            className: 'human-location-marker'
+        });
+
+        this.currentLocationMarker = L.marker([lat, lng], {
+            icon: humanIcon
+        }).bindPopup(`
+            <div style="text-align: center; padding: 5px;">
+                <strong style="color: #00D4AA;">📍 Your Location</strong><br>
+                <span style="font-size: 0.85em;">Lat: ${lat.toFixed(6)}°</span><br>
+                <span style="font-size: 0.85em;">Lng: ${lng.toFixed(6)}°</span><br>
+                <span style="font-size: 0.85em;">Alt: ${Math.round(this.currentPosition.elevation)}m</span>
+            </div>
+        `);
 
         this.currentLocationMarker.addTo(this.map);
     }
@@ -442,63 +473,73 @@ class MendakiViewer {
             });
             this.trackLayer.addLayer(trackLine);
 
-            // Enhanced start marker
+            // Enhanced start marker with flag icon
             const startIcon = L.divIcon({
                 html: `<div style="
-                    width: 24px; 
-                    height: 24px; 
-                    background: ${colors[segmentIndex % colors.length]}; 
+                    width: 32px; 
+                    height: 32px; 
+                    background: linear-gradient(135deg, ${colors[segmentIndex % colors.length]} 0%, #fff 100%); 
                     border: 3px solid #fff; 
-                    border-radius: 50%; 
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    border-radius: 8px; 
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 12px;
+                    font-size: 16px;
                     font-weight: bold;
                     color: #000;
-                ">●</div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15],
-                className: 'custom-marker'
+                    transform: rotate(-10deg);
+                ">🚩</div>`,
+                iconSize: [38, 38],
+                iconAnchor: [19, 32],
+                className: 'start-flag-marker'
             });
 
             const startMarker = L.marker([segment[0].lat, segment[0].lng], {
                 icon: startIcon
-            }).bindPopup(`<strong>Track ${segmentIndex + 1} Start</strong><br>
-                Lat: ${segment[0].lat.toFixed(5)}°<br>
-                Lng: ${segment[0].lng.toFixed(5)}°<br>
-                Elevation: ${Math.round(segment[0].elevation || 0)}m`);
+            }).bindPopup(`
+                <div style="text-align: center; padding: 5px;">
+                    <strong style="color: #00D4AA;">🚩 Track ${segmentIndex + 1} Start</strong><br>
+                    <span style="font-size: 0.85em;">Lat: ${segment[0].lat.toFixed(5)}°</span><br>
+                    <span style="font-size: 0.85em;">Lng: ${segment[0].lng.toFixed(5)}°</span><br>
+                    <span style="font-size: 0.85em;">Elevation: ${Math.round(segment[0].elevation || 0)}m</span>
+                </div>
+            `);
             this.trackLayer.addLayer(startMarker);
 
-            // Enhanced end marker
+            // Enhanced finish marker with checkered flag
             const endPoint = segment[segment.length - 1];
             const endIcon = L.divIcon({
                 html: `<div style="
-                    width: 24px; 
-                    height: 24px; 
-                    background: #fff; 
+                    width: 32px; 
+                    height: 32px; 
+                    background: linear-gradient(135deg, #000 0%, #fff 50%, #000 100%); 
                     border: 3px solid ${colors[segmentIndex % colors.length]}; 
-                    border-radius: 4px; 
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    border-radius: 8px; 
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 12px;
+                    font-size: 16px;
                     font-weight: bold;
-                    color: ${colors[segmentIndex % colors.length]};
-                ">■</div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15],
-                className: 'custom-marker'
+                    color: #fff;
+                    transform: rotate(10deg);
+                ">🏁</div>`,
+                iconSize: [38, 38],
+                iconAnchor: [19, 32],
+                className: 'finish-flag-marker'
             });
 
             const endMarker = L.marker([endPoint.lat, endPoint.lng], {
                 icon: endIcon
-            }).bindPopup(`<strong>Track ${segmentIndex + 1} End</strong><br>
-                Lat: ${endPoint.lat.toFixed(5)}°<br>
-                Lng: ${endPoint.lng.toFixed(5)}°<br>
-                Elevation: ${Math.round(endPoint.elevation || 0)}m`);
+            }).bindPopup(`
+                <div style="text-align: center; padding: 5px;">
+                    <strong style="color: #00D4AA;">🏁 Track ${segmentIndex + 1} Finish</strong><br>
+                    <span style="font-size: 0.85em;">Lat: ${endPoint.lat.toFixed(5)}°</span><br>
+                    <span style="font-size: 0.85em;">Lng: ${endPoint.lng.toFixed(5)}°</span><br>
+                    <span style="font-size: 0.85em;">Elevation: ${Math.round(endPoint.elevation || 0)}m</span>
+                </div>
+            `);
             this.trackLayer.addLayer(endMarker);
         });
 
