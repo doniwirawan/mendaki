@@ -11,13 +11,15 @@ class MendakiViewer {
         this.locationTimeout = null;
         this.guideTimeout = null;
 
-        // Local storage key
+        // Local storage keys
         this.storageKey = 'mendaki_saved_tracks';
+        this.activeTrackKey = 'mendaki_active_track';
 
         this.initializeMap();
         this.bindEvents();
         this.requestLocation();
         this.loadSavedTracks();
+        this.loadActiveTrack(); // Load active track on start
         this.registerServiceWorker();
     }
 
@@ -242,19 +244,24 @@ class MendakiViewer {
 
         try {
             const fileContent = await this.readFile(file);
+            let fileType = '';
 
             if (fileName.endsWith('.gpx')) {
+                fileType = 'gpx';
                 this.parseAndDisplayGPX(fileContent);
-                // Save to local storage
-                this.saveTrackToStorage(file.name, fileContent, 'gpx');
             } else if (fileName.endsWith('.kml') || fileName.endsWith('.kmz')) {
+                fileType = 'kml';
                 this.parseAndDisplayKML(fileContent);
-                this.saveTrackToStorage(file.name, fileContent, 'kml');
             } else if (fileName.endsWith('.tcx')) {
+                fileType = 'tcx';
                 this.parseAndDisplayTCX(fileContent);
-                this.saveTrackToStorage(file.name, fileContent, 'tcx');
             } else if (fileName.endsWith('.fit')) {
                 console.log('FIT file support coming soon');
+            }
+
+            if (fileType) {
+                this.saveTrackToStorage(file.name, fileContent, fileType);
+                this.setActiveTrack(fileContent, fileType);
             }
         } catch (error) {
             console.log('Error reading file:', error.message);
@@ -683,6 +690,9 @@ class MendakiViewer {
         document.getElementById('trackPoints').textContent = '0';
         document.getElementById('trackElevation').textContent = '0';
 
+        // Clear active track from local storage
+        localStorage.removeItem(this.activeTrackKey);
+
         // Return to default view if no current location
         if (!this.currentPosition) {
             this.map.setView([40.7128, -74.0060], 10);
@@ -827,6 +837,7 @@ class MendakiViewer {
             } else if (track.type === 'tcx') {
                 this.parseAndDisplayTCX(track.content);
             }
+            this.setActiveTrack(track.content, track.type);
             console.log(`Loaded saved track: ${track.name}`);
         } catch (error) {
             console.log('Error loading saved track:', error);
@@ -858,6 +869,7 @@ class MendakiViewer {
             const gpxContent = await this.loadAndParseGPX(trailName);
             this.parseAndDisplayGPX(gpxContent);
             this.saveTrackToStorage(`${trailName}.gpx`, gpxContent, 'gpx');
+            this.setActiveTrack(gpxContent, 'gpx');
             console.log(`Loaded sample trail: ${trailName}`);
         } catch (error) {
             console.log('Error loading sample trail:', error);
@@ -877,6 +889,39 @@ class MendakiViewer {
         } catch (error) {
             console.error('Error fetching or parsing GPX file:', error);
             throw error;
+        }
+    }
+
+    loadActiveTrack() {
+        try {
+            const activeTrack = localStorage.getItem(this.activeTrackKey);
+            if (activeTrack) {
+                const track = JSON.parse(activeTrack);
+                if (track && track.content && track.type) {
+                    this.showLoading();
+                    if (track.type === 'gpx') {
+                        this.parseAndDisplayGPX(track.content);
+                    } else if (track.type === 'kml') {
+                        this.parseAndDisplayKML(track.content);
+                    } else if (track.type === 'tcx') {
+                        this.parseAndDisplayTCX(track.content);
+                    }
+                    console.log('Loaded active track from last session');
+                    this.hideLoading();
+                }
+            }
+        } catch (error) {
+            console.log('Could not load active track:', error);
+            localStorage.removeItem(this.activeTrackKey);
+        }
+    }
+
+    setActiveTrack(content, type) {
+        try {
+            const track = { content, type };
+            localStorage.setItem(this.activeTrackKey, JSON.stringify(track));
+        } catch (error) {
+            console.log('Failed to set active track:', error);
         }
     }
 
